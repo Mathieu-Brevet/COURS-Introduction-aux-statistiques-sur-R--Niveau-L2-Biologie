@@ -293,11 +293,11 @@ Il peut arriver que certaines **valeurs** d'une variable soient **manquantes** d
 ::::
 
 
-:::: {.greybox_red data-latex=""}
+:::: {.greybox_green data-latex=""}
 
-**POUR ALLER PLUS LOIN**  
+**NOTE IMPORTANTE**  
 \newline
-Il peut parfois être utile de **convertir** une variable d'un format à un autre (par exemple d'une chaîne de caractères à un facteur ou d'un nombre à une chaîne de caractères), dans ce cas on peut utiliser les fonctions de la forme "as.format()", en remplaçant le mot "format" par le format dans lequel on souhaite convertir la variable en entrée (par exemple "as.character()" permet de convertir une variable en format chaîne de caractères). Attention: il faut être prudent avec ce type de manipulation pour éviter des conversions forcés qui n'ont pas lieu d'être.
+Il peut parfois être utile de **convertir** une variable d'un format à un autre (par exemple d'une chaîne de caractères à un facteur ou d'un nombre à une chaîne de caractères), dans ce cas on peut utiliser les fonctions de la forme **"as.format()"**, en remplaçant le mot "format" par le format dans lequel on souhaite convertir la variable en entrée (par exemple "as.character()" permet de convertir une variable en format chaîne de caractères). Attention: il faut être prudent avec ce type de manipulation pour éviter des conversions forcés qui n'ont pas lieu d'être.
 ::::
 
 
@@ -1307,7 +1307,7 @@ Ces différentes manipulations seront la base de tous vos travaux sur R et vont 
 **MISE EN APPLICATION**  
 \newline
   
-Dans l'espace E-learn vous trouverez un autre jeu de données appelé "Interactions_dauphins_bateaux.txt". Cette table de données décrit le comportement de dauphins à proximité de bateaux (colonne boat.dist: "no"= pas de réponse, "approach"= s'approche du bateau, "avoidance"= s'éloigne du bateau, "response"= interagit avec le bateau) et peut être utile à des gestionnaires pour comprendre le potentiel dérangement généré par ces interactions. L'objectif est pour vous d'importer ce jeu de données dans R et d'utiliser les outils qui vous ont été présentés pour explorer ces données et vous les approprier. Voici quelques exemples ci-dessous d’objectifs que vous pouvez chercher à réaliser lors de votre exploration.  
+Dans l'espace E-learn vous trouverez un autre jeu de données appelé "Interactions_dauphins_bateaux.txt". Cette table de données décrit le comportement de dauphins à proximité de bateaux (colonne boat.dist: "no"= pas de réponse, "approach"= s'approche du bateau, "avoidance"= s'éloigne du bateau, "response"= interagit avec le bateau) et peut être utile à des gestionnaires pour comprendre le potentiel dérangement généré par ces interactions. L'objectif est pour vous d'importer ce jeu de données dans R et d'utiliser les outils qui vous ont été présentés au cours de cette séance pour explorer ces données et vous les approprier. Voici quelques exemples ci-dessous d’objectifs que vous pouvez chercher à réaliser lors de votre exploration.  
 
   * Quel est la taille de ce jeu de données ? Quelles sont les différentes variables de ce jeu de données ? Quelles sont leur classe ? Leurs valeurs ? Y a-t-il des variables contenant des valeurs manquantes ?
   * Quels sont les réponses et comportements observés en fonction de l'âge, du sexe ? Y a-t-il des différences entre ces ensembles ?
