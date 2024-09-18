@@ -99,7 +99,7 @@ cumsum(
 
 
 Lorsque nous avons cherché à décrire les fréquences de classes et le mode de la variable nous avons utilisé une suite de commande. Au lieu d'utiliser cette suite de commande de manière répétée à chaque fois que nous en aurons besoin, nous pouvons construire **une fonction** nous permettant de formaliser l'opération et de pouvoir l'appeler dès que nécessaire (et ainsi gagner du temps dans l'écriture des scripts).  
-Une fonction s'écrit sur R sous la forme: **Nom <- function(arg)** {...} ("Nom": nom de la fonction; "arg": argument de la fonction, il peut y en avoir plusieurs séparés par des virgules; "...": commandes réalisées par la fonction). Voici deux exemples de construction de fonction:
+Une fonction s'écrit sur R sous la forme: **Nom <- function(arg)** {...} ("Nom": nom de la fonction; "arg": argument de la fonction, il peut y en avoir plusieurs séparés par des virgules; "...": commandes réalisées par la fonction, chaque nouvelle commande est séparé par un retour à la ligne ou un point-virgule). Voici deux exemples de construction de fonction:
 
 
 ```{r creation fonction}
@@ -181,7 +181,7 @@ pie(
   table(data_lezard$POP),
   main = "Proportion d'individus suivis par population"
   )
-# diagramme en "camembert" (peu utilisé)
+# diagramme criculaire (peu utilisé)
 
 
 
@@ -462,7 +462,7 @@ summary(data_lezard$M_IND)
 
 
 
-Nous allons maintenant décrire graphiquement la distribution que nous venons d'étudier. Les deux modes graphiques les plus utilisés pour la visualisation de variables quantitatives sont les **histogrammes** (permettant d'avoir une idée du type de distribution de probabilité que peut suivre la variable et sa forme globale) et les **boxplots** qui permettent d'avoir une visualisation rapide des paramètres de position et de dispersion de la variable. D'autres visualisation graphiques alternatives permettent également de décrire la distribution. Voici les principaux exemples de sorties graphiques ci-dessous:
+Nous allons maintenant décrire graphiquement la distribution que nous venons d'étudier. Les deux modes graphiques les plus utilisés pour la visualisation de variables quantitatives sont les **histogrammes** (permettant d'avoir une idée du type de distribution de probabilité que peut suivre la variable et sa forme globale) et les **boxplots** qui permettent d'avoir une visualisation rapide des paramètres de position et de dispersion de la variable. D'autres visualisation graphiques alternatives (par nuage de points) permettent également de décrire la distribution. Voici les principaux exemples de sorties graphiques ci-dessous:
 
 
 ```{r description graphique quantitatif, tidy=FALSE}
@@ -1193,7 +1193,7 @@ Nous avons étudié comment décrire statistiquement et graphiquement des variab
 Les fonctions clés pour décrire une variable **qualitative** sont les suivantes:  
 
   - **table()**: table d'effectifs
-  - **barplot()**: graphe en barre
+  - **barplot()**: graphe en barres
   
 Les fonctions clés pour décrire une variable **quantitative** sont les suivantes:  
 
