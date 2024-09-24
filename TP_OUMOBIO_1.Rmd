@@ -1336,7 +1336,7 @@ Différents **aides-mémoires** sont disponibles en ligne et permettent d'avoir 
 
 **POUR ALLER PLUS LOIN**  
 \newline
-En programmation il existe des logiciels permettant d'avoir un suivi de l'évolution de son code au cours du temps et d'interagir à plusieurs sur les scripts produits, de manière interactive. Ces logiciels de gestions de versions (ou de "versionning") permettent de facilement récupérer des versions antérieures d'un script et d'effectuer facilement des essais ou développements à partir d'un script donné. Le logiciel le plus connu et utilisé est Git, avec deux interfaces majeures: GitLab et GitHub. Ces logiciels permettent une meilleure transparence et lisibilité d'un projet et leur utilisation est fortement recommandé dans tous projets de programmation.
+En programmation il existe des logiciels permettant d'avoir un suivi de l'évolution de son code au cours du temps et d'interagir à plusieurs sur les scripts produits, de manière interactive. Ces logiciels de gestions de versions (ou de "versionning") permettent de facilement récupérer des versions antérieures d'un script et d'effectuer facilement des essais ou développements à partir d'un script donné. Le logiciel le plus connu et utilisé est Git, avec deux interfaces majeures: GitLab et GitHub. Ces logiciels permettent une meilleure transparence et lisibilité d'un projet et leur utilisation est fortement recommandé dans tous projets de programmation.  Il existe sur Rstudio une interface intégrée permettant de gérer Votre GitHub directement depuis Rstudio, accessible depuis le menu "Tools" -> "Global options" -> "Git/SVN" (un tutoriel existe dans les ressources GitHub: <https://resources.github.com/github-and-rstudio/>).
 ::::
 
 
