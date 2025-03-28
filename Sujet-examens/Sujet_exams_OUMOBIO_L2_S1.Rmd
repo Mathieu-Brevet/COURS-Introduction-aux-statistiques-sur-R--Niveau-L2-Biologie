@@ -36,6 +36,48 @@ write.csv(Suivi_Mesange, "Suivi_Mesange.csv", row.names = F)
 
 
 
+
+# Suivi de mésange charbonnière S2:
+
+
+out <- as.data.frame(mvrnorm(100, mu = c(0,0,0), 
+                     Sigma = matrix(c(1,0.78,0.53,0.78,1,0.91,0.53,0.91,1), ncol = 3), 
+                     empirical = TRUE))
+
+Envergure <- round(out$V1 *1+25, 2)
+Taille <- round(out$V2 *1.5+14, 2)
+Poids <- round(out$V3 *3+17, 2)
+
+
+Sexe = sample(c("Femelle", "Mâle"), 100, T)
+Altitude = c(sample(c("Plaine", "Etage collinéen", "Etage montagnard"), 33, prob = c(0,0.1,0.9), T), sample(c("Plaine", "Etage collinéen", "Etage montagnard"), 34, prob = c(0, 1, 0), T), sample(c("Plaine", "Etage collinéen", "Etage montagnard"), 33, prob = c(0.9,0.1,0), T))
+Habitat = rep(NA, 100)
+Habitat[Altitude=="Plaine"] = sample(c("Forêt", "Jardin", "Parc", "Bocage"), length(Habitat[Altitude=="Plaine"]),  prob = c(0.2,0.3,0.3,0.2), T)
+Habitat[Altitude=="Etage collinéen"] = sample(c("Forêt", "Jardin", "Parc", "Bocage"), length(Habitat[Altitude=="Etage collinéen"]), prob = c(0.4,0.2,0.2,0.2), T)
+Habitat[Altitude=="Etage montagnard"] = sample(c("Forêt", "Jardin", "Parc", "Bocage"), length(Habitat[Altitude=="Etage montagnard"]), prob = c(1,0,0,0), T)
+
+
+
+Suivi_Mesange2 = data.frame(Envergure, Taille, Poids, Sexe)
+Suivi_Mesange2 = Suivi_Mesange2[order(Suivi_Mesange2$Taille),]
+Suivi_Mesange2$Altitude = Altitude
+Suivi_Mesange2$Habitat = Habitat
+Suivi_Mesange2 = Suivi_Mesange2[sample(1:100, 100), ]
+
+write.csv(Suivi_Mesange2, "Suivi_Mesange2.csv", row.names = F)
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Suivi de lapin de garenne:
 
 Nombre = rpois(100, 60)
@@ -53,10 +95,39 @@ Suivi_Lapin = Suivi_Lapin[sample(1:100, 100), ]
 
 write.csv(Suivi_Lapin, "Suivi_Lapin.csv", row.names = F)
 
+
+
+
+# Suivi de lapin de garenne S2:
+
+Nombre = rpois(100, 60)
+Aire = jitter(Nombre * 120 - 2300, 30)
+Temperature = rnorm(100, 17, 5)
+Reserve = rep(NA, 100)
+Reserve[Nombre/Aire <= median(Nombre/Aire)] = F
+Reserve[Nombre/Aire > median(Nombre/Aire)] = T
+Site = rep(NA, 100)
+Site[Reserve] = sample(LETTERS[1:3], length(Site[Reserve]), T)
+Site[!Reserve] = sample(LETTERS[4:6], length(Site[!Reserve]), T)
+
+Suivi_Lapin2 = data.frame(Nombre, Site, Aire, Temperature, Reserve)
+Suivi_Lapin2 = Suivi_Lapin2[order(Suivi_Lapin2$Temperature),]
+Suivi_Lapin2$Mois = c( rep(c("01", "12", "02", "03", "11", "04", "10", "05", "09", "06", "07", "08"), each = 8), "07","07","08", "08")
+Suivi_Lapin2 = Suivi_Lapin2[sample(1:100, 100), ]
+
+write.csv(Suivi_Lapin2, "Suivi_Lapin2.csv", row.names = F)
+
+
+
+
+
+
+
+
   
 
 
-# Suivi de meutes de loups:
+# Suivi de meutes de loups S1:
   
 Identifiant_meute = sample(LETTERS[1:20], 117, T, prob = sample(1:3, 20, T)) 
 Taille_meute = sort(rpois(117, 5), decreasing = T)
@@ -70,6 +141,35 @@ Suivi_Loup = data.frame(Identifiant_meute, Taille_meute, Distance_parcourue, Sur
 Suivi_Loup = Suivi_Loup[sample(1:117, 117), ]
 
 write.csv(Suivi_Loup, "Suivi_Loup.csv", row.names = F)
+
+
+
+
+# Suivi de meutes de loups S2:
+  
+Identifiant_meute = sample(LETTERS[1:20], 117, T, prob = sample(1:3, 20, T)) 
+Taille_meute = sort(rpois(117, 5), decreasing = T)
+Distance_parcourue = sort(rnorm(117, 40, 15))
+Surface_territoire = sort(rnorm(117, 80, 20))
+Composition = c(sample(c("Adultes et juvéniles", "Adultes"), 92, T), rep("Subadultes", 25))
+Pays = rep(NA, 117)
+Pays[Composition == "Adultes et juvéniles"] = sample(c("France", "Allemagne", "Italie", "Espagne", "Suisse"), length(Pays[Composition == "Adultes et juvéniles"]), T, prob = c(0, 0.25, 0.25, 0.25, 0.25))
+Pays[Composition == "Adultes"] = sample(c("France", "Allemagne", "Italie", "Espagne", "Suisse"), length(Pays[Composition == "Adultes"]), T, prob = c(0.1, 0.2, 0.2, 0.2, 0.2))
+Pays[Composition == "Subadultes"] = sample(c("France", "Allemagne", "Italie", "Espagne", "Suisse"), length(Pays[Composition == "Subadultes"]), T, prob = c(0.4, 0.15, 0.15, 0.15, 0.15))
+
+
+Suivi_Loup = data.frame(Identifiant_meute, Taille_meute, Distance_parcourue, Surface_territoire, Composition, Pays)
+
+Suivi_Loup = Suivi_Loup[sample(1:117, 117), ]
+
+write.csv(Suivi_Loup, "Suivi_Loup2.csv", row.names = F)
+
+
+
+
+
+
+
 
 
 
@@ -97,9 +197,19 @@ Gestation[Sexe == "Femelle" & Age > 3] = sample( c(T, F), length(Gestation[Sexe 
 write.csv(Suivi_Ours, "Suivi_Ours.csv", row.names = F)
 
 
+Suivi_Ours2 = Suivi_Ours[-100,]
+
+write.csv(Suivi_Ours2, "Suivi_Ours2.csv", row.names = F)
+
+
+
+
+
+
+
 
   
-# Suivi de rainette verte:
+# Suivi de rainette verte S1:
   
 
 Distance_mare = c(rgeom(99, 0.1), 396) 
@@ -120,23 +230,108 @@ write.csv(Suivi_Rainette, "Suivi_Rainette.csv", row.names = F)
 
 
 
+# Suivi de rainette verte S2:
+  
+Taille = rnorm(100, 4, 0.45) 
+Distance_mare = jitter(1 / (1 + exp(-3*scale(Taille))), 3000)
+Taille = Taille[Distance_mare < 0.99 & Distance_mare >0.01]
+Distance_mare = Distance_mare[Distance_mare < 0.99 & Distance_mare >0.01]
+
+Taille = Taille[-c(38, 37, 7)]
+Distance_mare = Distance_mare[-c(38, 37, 7)]
+Taille = Taille[-78]
+Distance_mare = Distance_mare[-78]
+
+Nbre_arbre_rayon = rpois(84, 5)
+Type_Route = sample(c("Route communale", "Route départementale", "Route nationale", "Autoroute"), 84, T, prob = c(0.4, 0.3, 0.2, 0.1))
+Type_Route = factor(Type_Route, levels = c("Route communale", "Route départementale", "Route nationale", "Autoroute"))
+
+Ponte = rep(NA, 84)
+Ponte[Type_Route=="Autoroute"] = sample(c(T,F), length(Ponte[Type_Route=="Autoroute"]), T, prob=c(0.2, 0.8))
+Ponte[Type_Route=="Route nationale"] = sample(c(T,F), length(Ponte[Type_Route=="Route nationale"]), T, prob=c(0.4, 0.6))
+Ponte[Type_Route=="Route départementale"] = sample(c(T,F), length(Ponte[Type_Route=="Route départementale"]), T, prob=c(0.6, 0.4))
+Ponte[Type_Route=="Route communale"] = sample(c(T,F), length(Ponte[Type_Route=="Route communale"]), T, prob=c(0.8, 0.2))
+  
+
+  Suivi_Rainette2 = data.frame(Distance_mare, Type_Route, Taille, Ponte)
+  Suivi_Rainette2 = Suivi_Rainette2[order(Type_Route),]
+  Suivi_Rainette2$Nbre_arbre_rayon = sort(Nbre_arbre_rayon, decreasing = T)
+  
+  Suivi_Rainette2 = Suivi_Rainette2[sample(1:84, 84), ]
+
+write.csv(Suivi_Rainette2, "Suivi_Rainette2.csv", row.names = F)
+
+
+
+
+
+
+
+
+
+
   
 # Suivi de merlu:
   
+Engin_peche = sample(c("Chaluts", "Filets maillants", "Palangres"), 100, T)
+Longueur_engin = rep(NA, 100)
+Longueur_engin[Engin_peche=="Chaluts"] = rnorm(length(Longueur_engin[Engin_peche=="Chaluts"]), 100, 50)
+Longueur_engin[Engin_peche!="Chaluts"] = rnorm(length(Longueur_engin[Engin_peche!="Chaluts"]), 2000, 1000)
+Poids_peche = rnorm(100, 1000, 400)
+Zone = sample(c("ZEE_Fr", "ZEE_Sp", "ZEE_Gb", "ZEE_Ir"), 100, T)
+Bycatch = rep(NA, 100)
+Bycatch[Engin_peche=="Chaluts"]=sample(c(T, F), length(Bycatch[Engin_peche=="Chaluts"]), T, prob = c(0.4, 0.6))
+Bycatch[Engin_peche=="Filets maillants"]=sample(c(T, F), length(Bycatch[Engin_peche=="Filets maillants"]), T, prob = c(0.7, 0.3))
+Bycatch[Engin_peche=="Palangres"]=sample(c(T, F), length(Bycatch[Engin_peche=="Palangres"]), T, prob = c(0.1, 0.9))
+Nombre = rep(NA, 100)
+Nombre[Bycatch==T] = rpois(length(Nombre[Bycatch==T]), 5)
   
-  
+    Suivi_Merlu = data.frame(Engin_peche, Longueur_engin, Zone, Bycatch, Nombre)
+    
+Suivi_Merlu[Bycatch==T,]=Suivi_Merlu[Bycatch==T,][order(Suivi_Merlu[Bycatch==T,]$Longueur_engin),]
+Suivi_Merlu[Bycatch==T,]$Nombre = sort(Suivi_Merlu[Bycatch==T,]$Nombre)
+
+Suivi_Merlu=Suivi_Merlu[order(Suivi_Merlu$Longueur_engin),]
+Suivi_Merlu$Poids_peche = sort(Poids_peche)
+
+Suivi_Merlu = Suivi_Merlu[sample(1:100, 100), ]
+
+
+write.csv(Suivi_Merlu, "Suivi_Merlu.csv", row.names = F)
+
+
   
 # Suivi de libellule:
   
+  Taille = c() 
+  Envergure = c()
+  Espece = rep(letters[1:5], c(9, 18, 20, 23, 34))
+  Couleur = sample(c("Vert", "Bleu", "Rouge", "Jaune"), 104, T)
+  Etat_zone_humide = c(rep("Très bonne",15),  rep("Bonne", 12), sample(c("Très bonne", "Bonne", "Dégradé", "Très dégradé"), 77, T, prob = c(0.35, 0.3, 0.2, 0.15)))
   
+  
+  Ti = 70
+  for (i in letters[1:5]) {
+    Taille = c(Taille, rnorm( length(Espece[Espece==i]), Ti, 7))
+    Envergure = c(Envergure, rnorm( length(Espece[Espece==i]), Ti+5, 7))
+    Ti = Ti - 10
+  }
 
+    Suivi_Libellule = data.frame(Taille, Envergure, Espece, Couleur, Etat_zone_humide)
 
+Suivi_Libellule = Suivi_Libellule[sample(1:104, 104), ]
+
+    
+
+write.csv(Suivi_Libellule, "Suivi_Libellule.csv", row.names = F)
+
+    
 ```
 
 
 
 
-Exercice type:
+Exercice type S1:
 
 - Donner moyenne / variance, écart-type d'une variable
 - Donner médiane / écart interquartile d'une variable
@@ -166,22 +361,55 @@ Exercice type:
 
 
 
+Exercice type S2:
+
+- répéter des opérations fastidieuse et complexe (for / apply), avec potentiellement des conditions dedans
+- écrire en une ligne une instruction conditionnelle (ifelse)
+- Donner mesures stat par groupe (forcer ou non l'utilisation boucle ou apply, ou table contingence)
+- Interpréter différences dans les stats obtenues
+- Illustrer les différences par des graphiques
+- Utiliser bon outils pour comparaison de deux variables (potentiellement faire intervenir variable tiers pour exercer sélection complexe)
+- Pour des différences sur distribution normale, réaliser des comparaison par intervalle de confiance
+- Créer un nouvelle variable sous condition (impliquer plusieurs variables, valeurs quantitative groupé, calcul différent sous condition, combinaison qualitatitve différente sous conditions...)
+- créer une loi de distribution, comparer à une distribution donnée (graphiquement: hist+densité, qqplot, faire des vraies et fausse)
+- décrire la relation entre deux variable statistiquement (faire bon choix suivant linéarité/monotonie)
+- faire un test importance dimensionalité
+- Etude relation entre deux variable quanti (graphe + reg + val +interprétation)
+- affichage graphique regression
+- faire prediction d'une nouvelle valeur
+- comparer plusieurs relations (pente après centrer reduire, R squared => adequation donnée)
+- réaliser transformation variable (faire comparaison avant transfo: polynome second degré, expo, sigmoide avec indication)
+- répérer biais dans validité régression (outlier, variation résidus)
+- corriger une distribution biaisé (validité + graphique + transfo)
+
+- Explication d'une ligne complexe (condition ou boucle emboîté, répétition / condition sur commande multiple / simulation d'une loi normale et sortie de proba, création de graphe complexe, transformation d'une variable, boucle while...) ou utilité commande (ifelse, sapply, predict, fitted.values...)
+- Interpréation d'une sortie graphique tiers (validité modèle, linéarité, symétrie, monotonie...)
+- Ecriture d'une fonction à partir formule (ex: fonction intervalle de confiance, fonction centrer-réduire, r squared, fonction logit ?)
+- correction d'erreur sur ligne de code
+- expliquer rapidement une fonction jamais utilisée et l'appliquer (rbinom, rpois, colMeans, sample, replicate, ave, pairs...)
+- Demander une interprétation de résultats: sex-ratio biaisé, différence de taille en fonction habitat, corrélation-causalité (avec petit texte remettant du contexte...)
+- Note sur mise en forme, espacement (Bonus)
+
+
+
 ==> donner 8 exercices de difficultés croissante
 
 
 
 
 
-## Sujet Mésange:
+## Sujet Mésange S1:
 
-1) Donner la nature des différentes variables présentes dans le jeu données (explicitez la nomenclature utilisée dans R). 
-2) Calculez la moyenne et l'écart-type de l'envergure des mésanges suivies (donnez les valeurs arrondies au mg).
-3) Comparez les valeurs médiane du poids et de la taille par sexe. Faire une comparaison graphique adaptés des paramètres de position pour le poids uniquement.
-4) Créez une nouvelle colonne égale au rapport Poids/Taille en valeur logarithmique. Le rapport poids/taille varie-t'il plus que l'envergure des mésanges suivies ?
-5) Donnez les fréquences des mésanges dans leurs différents habitats et indiquer l'habitat où les mésanges dont le poids est supérieur à 18g sont le plus présentes.
-6) Créez une variable combinant les informations d'habitat et d'altitude. Donner le nombre de mésange par combinaison d'habitat et d'altitude et en faire une représentation graphique.
-7) Expliquez ce que réalise la ligne suivante: exp(Suivi_Mesange[grepl(Suivi_Mesange$Altitude, "Etage") | Suivi_Mesange$Habitat %in% c("Forêt", "Bocage"), "Poids"]).
-8) A l'aide de la documentation R, trouvez quelle est l'utilité de la fonction "toupper", donner un exemple d'application adaptée.
+1) Donner la nature des différentes variables présentes dans le jeu données (explicitez la nomenclature utilisée dans R). (/1.5)
+2) Calculez la moyenne et l'écart-type de l'envergure des mésanges suivies (donnez les valeurs arrondies au cm). (/1.5)
+3) Comparez les valeurs médiane du poids et de la taille par sexe. Faire une comparaison graphique adaptés des paramètres de position pour le poids uniquement. (/3.5)
+4) Créez une nouvelle colonne égale au rapport Poids/Taille en valeur logarithmique. Le rapport poids/taille varie-t'il plus que l'envergure des mésanges suivies ? (/2)
+5) Donnez les fréquences des mésanges dans leurs différents habitats et indiquer l'habitat où les mésanges dont le poids est supérieur à 18g sont le plus présentes. (/2.5)
+6) Créez une variable combinant les informations d'habitat et d'altitude. Donner le nombre de mésange par combinaison d'habitat et d'altitude et en faire une représentation graphique. (/2.5)
+7) Expliquez ce que réalise la ligne suivante: exp(Suivi_Mesange[grepl(Suivi_Mesange$Altitude, "Etage") | Suivi_Mesange$Habitat %in% c("Forêt", "Bocage"), "Poids"]). (/2.5)
+8) A l'aide de la documentation R, trouvez quelle est l'utilité de la fonction "toupper", donner un exemple d'application adaptée. (/1.5)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
 
 
 ```{r corrections sujet mésanges}
@@ -192,98 +420,267 @@ setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
 Suivi_Mesange = read.csv("Suivi_Mesange.csv")
 
 
-##### Exercice 1 #####
+##### Exercice 1 ##### 
 
-str(Suivi_Mesange)
-# Les 3 premières variables (Envergure, Taille et Poids) sont des variables numériques réelles, notées "numeric" dans R. Les 3 variables suivantes (Sexe, Habitat, Altitude) sont des variables catégorielles (des chaînes de caractère), notées "character" dans R.
+str(Suivi_Mesange) # /0.5
+# Les 3 premières variables (Envergure, Taille et Poids) sont des variables numériques réelles, notées "numeric" dans R. Les 3 variables suivantes (Sexe, Habitat, Altitude) sont des variables catégorielles (des chaînes de caractère), notées "character" dans R. 
+# / 1 (description)
 
 
 ##### Exercice 2 #####
 
-round(mean(Suivi_Mesange$Envergure), 3)
-round(sd(Suivi_Mesange$Envergure), 3)
-# Les mésanges pèsent en moyenne 25.083 g et l'écart-type de leur poids est de 0.991 g
+round(mean(Suivi_Mesange$Envergure)) # /0.5 (moyenne)
+round(sd(Suivi_Mesange$Envergure)) # /0.5 (écart-type)
+# Les mésanges pèsent en moyenne 25 g et l'écart-type de leur poids est de 1 g
+# /0.5 pour arrondi
 
 
 ##### Exercice 3 #####
 
-median(Suivi_Mesange[Suivi_Mesange$Sexe=="Mâle",]$Poids)
-median(Suivi_Mesange[Suivi_Mesange$Sexe=="Femelle",]$Poids)
+median(Suivi_Mesange[Suivi_Mesange$Sexe=="Mâle",]$Poids) # /0.5 (médiane poids)
+median(Suivi_Mesange[Suivi_Mesange$Sexe=="Femelle",]$Poids) # /0.5 (sélection par sexe)
 boxplot(Suivi_Mesange[Suivi_Mesange$Sexe=="Mâle",]$Poids,
         ylab = "Poids des individus mâles (g)",
-        main = "Répartition du poids des individus mâles (graphique boîte à moustache)")
+        main = "Répartition du poids des individus mâles (graphique boîte à moustache)") # /1 (boxplot poids)
 boxplot(Suivi_Mesange[Suivi_Mesange$Sexe=="Femelle",]$Poids,
         ylab = "Poids des individus femelles (g)",
-        main = "Répartition du poids des individus femelles (graphique boîte à moustache)")
-median(Suivi_Mesange[Suivi_Mesange$Sexe=="Mâle",]$Taille)
-median(Suivi_Mesange[Suivi_Mesange$Sexe=="Femelle",]$Taille)
+        main = "Répartition du poids des individus femelles (graphique boîte à moustache)") # /0.5 (par sexe)
+median(Suivi_Mesange[Suivi_Mesange$Sexe=="Mâle",]$Taille) # /0.5 (médiane Taille)
+median(Suivi_Mesange[Suivi_Mesange$Sexe=="Femelle",]$Taille) # /0.5 (sélection par sexe)
 # Le poids médian des mâles est supérieur à celui des femelles. La taille médiane des femelles est supérieure à celle des mâles mais la différence est minime (<0.1 cm).
 
 
 ##### Exercice 4 #####
 
-Suivi_Mesange$Rapport_Poids_Taille = log(Suivi_Mesange$Poids / Suivi_Mesange$Taille)
+Suivi_Mesange$Rapport_Poids_Taille = log(Suivi_Mesange$Poids / Suivi_Mesange$Taille) # /1 (/0.5: création colonne avec rapport, /0.5: logarithme)
 
-var(Suivi_Mesange$Rapport_Poids_Taille) > var(Suivi_Mesange$Envergure)
+var(Suivi_Mesange$Rapport_Poids_Taille) > var(Suivi_Mesange$Envergure) # /1 (/0.5: variance, /0.5: comparaison par test logique)
 # La variance de la variable "Rapport_Poids_Taille" est inférieure à la variance de l'envergure des mésanges.
 
 
 ##### Exercice 5 #####
 
-table(Suivi_Mesange$Habitat) / length(Suivi_Mesange$Habitat)
+table(Suivi_Mesange$Habitat) / length(Suivi_Mesange$Habitat) # /1 (/0.5: effectifs, /0.5: rapport)
 # Fréquences des mésanges dans leurs différents habitats
 
-table(Suivi_Mesange[Suivi_Mesange$Poids > 18, "Habitat"])
+table(Suivi_Mesange[Suivi_Mesange$Poids > 18, "Habitat"]) # /1 (/0.5: effectifs, /0.5: sélection)
 # Les mésanges de plus de 18g sont les plus présentes dans les parcs.
+# /0.5: mode
 
 
 ##### Exercice 6 #####
 
-Habitat_Altitude = paste(Suivi_Mesange$Habitat, Suivi_Mesange$Altitude)
+Habitat_Altitude = paste(Suivi_Mesange$Habitat, Suivi_Mesange$Altitude) # /1 (/0.5: création variable, /0.5: paste)
 
-table(Habitat_Altitude)
+table(Habitat_Altitude) # /0.5
 barplot(table(Habitat_Altitude),
         xlab = "Combinaison d'habitat et d'altitude",
         ylab = "Nombre de mésanges observées",
-        main = "Nombre de mésanges par habitat et altitude")
+        main = "Nombre de mésanges par habitat et altitude") # /1
 # Nombre de mésange par combinaison d'habitat et d'altitude et sa représentation graphique  
 
 
 ##### Exercice 7 #####
 
 exp(Suivi_Mesange[grepl(Suivi_Mesange$Altitude, "Etage") | Suivi_Mesange$Habitat %in% c("Forêt", "Bocage"), "Poids"])
-# Cette ligne fournit la valeur exponentielle du poids des mésanges provenant soit des étages colinnéens et montagneux, soit des habitats forêt et bocage.
+# Cette ligne fournit la valeur exponentielle (/0.5) du poids (/0.5) des mésanges provenant soit (/0.5) des étages colinnéens et montagneux (/0.5), soit des habitats forêt et bocage (/0.5).
 
 
 ##### Exercice 8 #####
 
-?toupper
+?toupper # /0.5
 # cette fonction permet de convertir les éléments d'une chaine de caractère en minuscule vers des majuscules
-toupper(Suivi_Mesange$Habitat)
+# /0.5: interpretation
+toupper(Suivi_Mesange$Habitat) # /0.5
 # passage des noms d'habitat en majuscule
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
 
 ```
 
 
 
-## Sujet Lapin:
 
-1) Expliquez le rôle de la fonction "str()". Faites en une application appropriée.
-2) Calculez les médianes et l'écart inter-quartiles du nombre de lapin échantillonné par sortie.
-3) Convertissez le nombre d'individus en variable catégorielle et trouvez le mode de cette distribution.
-4) La répartition des échantillonages est-elle équilibré entre les différents sites ? Est-ce aussi aussi le cas en considérant uniquement les échantillonnages réalisés à strictement plus de 24°C et sur des aires inférieures ou égales à 6000 m² ?
-5) Comparez le nombre total d'individus capturé dans des réserves de chasses et le nombre d'individus capturés en-dehors. Représentez graphiquement la distribution du nombre d'individus capturés en présence et absence de réserve de chasse.
-6) Créez une nouvelle variable contenant la densité d'individus capturés par sortie d'échantillonnage. Y a t'il une densité plus grande en moyenne dans les réserves de chasse ?
-7) Extraire le mois de la date d'échantillonage dans une nouvelle colonne. Donnez la température moyenne par trimestre et commentez le résultat.
+
+
+
+## Sujet Mésange S2:
+
+1) A l'aide d'une boucle, comparez les valeurs médianes de taille des mésange par classe d'habitat. Illustrez sur un même graphique les variations de valeurs de taille en fonction de la classe d'habitat (/2.5)
+2) Créez une fonction permettant de vérifier graphiquement l'adéquation d'une série numérique à une loi normale. (/1.5)
+3) Créez une fonction permettant de calculer l'intervalle de confiance d'une série numérique suivant une loi normale. (/1.5)
+4) A l'aide des fonctions précédemment créées et en utilisant une fonction de la famille "apply", testez si la taille des individus diffère en fonction du sexe ou en fonction de l'altitude (/2.5)
+5) Expliquez ce que permet de réaliser la fonction "pairs()". Faites en une application pertinente. (/2)
+6) Modélisez toutes les relations existantes entre variables quantitatives du jeu de données. (/2.5)
+7) Analysez les résultats des modèles effectués et comparez les modèles entre eux. (/3)
+8) Expliquez ce que réalisent les commandes suivantes (faites une description ligne par ligne, puis une conclusion sur l'utilité de la commande dans son entièreté): (/2)
+for (i in 1:dim(Suivi_Mesange)[2]) {
+  for (j in 1:dim(Suivi_Mesange)[2]) {
+    if (is.numeric(Suivi_Mesange[,i]) & is.numeric(Suivi_Mesange[,j]))
+      if (j > i) {
+        print(lm(Suivi_Mesange[,i] ~ Suivi_Mesange[,j]))
+    }
+  }
+}
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
+
+
+```{r corrections sujet mésanges}
+
+#### Examen: suivi d'une population de mésange ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Mesange = read.csv("Suivi_Mesange2.csv")
+
+
+##### Exercice 1 ##### 
+
+for (i in unique(Suivi_Mesange$Habitat)) {
+  print(median(Suivi_Mesange[Suivi_Mesange$Habitat == i,]$Taille))
+}
+# /1.5 (boucle: 0.5 / unique: 0.25 / print: 0.25 / median: 0.25 / selection:0.25)
+# on observe que la taille médiane des individus est plus grande dans les jardins, parcs et bocages par rapport aux forêts
+
+
+# Illustration graphique des valeurs de taille en fonction de l'altitude:
+
+boxplot(Suivi_Mesange$Taille ~ Suivi_Mesange$Habitat,
+        xlab = "Habitat de capture",
+        ylab = "Taille des individus (cm)",
+        main = "Variation de la taille des individus en fonction de l'habitat")
+# /1 (boxplot, formule)
+
+
+##### Exercice 2 #####
+
+
+graphe_normalite <- function(x) {
+  qqnorm(x)
+  qqline(x)
+}
+# Fonction permettant de tester graphiquement l'adéquation d'une distribution à une loi normale (QQ-plot)
+# /1.5 (fonction / qqnorm / qqline)
+
+
+##### Exercice 3 #####
+
+int_confiance <- function(x) {
+  c(mean(x) - 1.96 * sd(x), mean(x) + 1.96 * sd(x))
+}
+# Fonction permettant de calculer l'intervalle de confiance d'une série suivant une loi normale
+# /1.5 (vecteur / def intervalle / sd, mean)
+
+
+##### Exercice 4 #####
+
+tapply(Suivi_Mesange$Taille, Suivi_Mesange$Sexe, graphe_normalite)
+tapply(Suivi_Mesange$Taille, Suivi_Mesange$Altitude, graphe_normalite) 
+# D'après les QQ-plot obtenus, les distributions de taille semblent suivre une loi normale (les points sont à peu près alignés). Il convient toutefois de noter qu'il y a parfois de légers écarts à une loi normale pour les valeurs extêmes de taille.
+
+tapply(Suivi_Mesange$Taille, Suivi_Mesange$Sexe, int_confiance)
+tapply(Suivi_Mesange$Taille, Suivi_Mesange$Altitude, int_confiance) # /2 (/0.5: tapply / sexe, altitude: 0.5 / graphique + intervalle: 0.5 / justification normalité: /0.5)
+# Comme les distributions semblent suivre une loi normale on peut utiliser des intervalles de confiance pour tester si les distributions sont distinctes ou non. Lorsqu'on compare les sexes entre eux il n'y statistiquement pas de différence de taille (fort chevauchement des deux intervalles de confiance). A l'inverse les intervalles de confiance ne se recouvrent pas lorsqu'on compare les individus en plaine à ceux présents à l'étage montagnard: la taille des indivdus diffère bien entre ces deux habitats.
+# /0.5 (interprétation)
+
+
+##### Exercice 5 #####
+
+?pairs # \1 (/0.5: aide, /0.5: explication)
+# la fonction "pairs()" permet de produire une matrice de graphique en nuage de points
+
+pairs(Suivi_Mesange[, c("Envergure", "Poids", "Taille")]) # /1 (/0.5: application pertinente, /0.5: selection)
+# affichage des graphiques en nuage de points pour chaque paire de variable quantitative du jeu de données
+
+
+##### Exercice 6 #####
+
+# D'après l'exercice précédent, les relations entre variables quantitatives semblent linéaire: on pourra donc utiliser des régressions linéaires pour modéliser ces relations. 
+# /0.5 (justification type modèle)
+
+reg_env_poids = lm(Envergure ~ Poids, data = Suivi_Mesange)
+reg_env_taille = lm(Envergure ~ Taille, data = Suivi_Mesange)
+reg_poids_taille = lm(Poids ~ Taille, data = Suivi_Mesange) # /1 (/0.5: lm, /0.5: repetition)
+
+plot(reg_env_poids)
+plot(reg_env_taille)
+plot(reg_poids_taille) # /1 (/0.5: graphique validation, 0.5: interprétation)
+# Aucun problème majeur de non-linéarité des résidus (premier graphe) ou de non homoscédasticité des résidus (troisième graphe) n'apparait: les hypotèses requises pour la régression sont donc bien vérifiées. On n'observe pas de points d'influence important non plus (quatrième graphe).
+
+
+##### Exercice 7 #####
+
+summary(reg_env_poids)$r.squared
+summary(reg_env_taille)$r.squared
+summary(reg_poids_taille)$r.squared # /1 (/0.5: R², /0.5: comparaison)
+# L'adéquation des modèles aux données varie fortement: il y a une relation linéaire robuste entre la taille et le poids des individus (83% de la variation expliquée par le modèle), légèrement moins robuste entre l'envergure et la taille (61% de la variation expliquée par le modèle), et faible entre l'envergure et la taille (28% de la variation expliquée par le modèle) 
+
+coefficients(reg_env_poids)
+coefficients(reg_env_taille)
+coefficients(reg_poids_taille) # /1 (/0.5: coeffs, /0.5: comparaison)
+# Lorsque le poids augmente d'un gramme l'envergure augmente de 0.18 cm environ. Lorsque la taille augmente d'1 cm l'envergure augmente de 0.52 cm environ et le poids d'1.8 g environ. Ces mesures de taille d'effet sont toufois unité dépendeente et donc difficilement comparable entre elles.
+
+
+reg_env_poids_scaled = lm(scale(Envergure) ~ scale(Poids), data = Suivi_Mesange)
+reg_env_taille_scaled = lm(scale(Envergure) ~ scale(Taille), data = Suivi_Mesange)
+reg_poids_taille_scaled = lm(scale(Poids) ~ scale(Taille), data = Suivi_Mesange)
+
+coefficients(reg_env_poids_scaled)
+coefficients(reg_env_taille_scaled)
+coefficients(reg_poids_taille_scaled) # /1 (/0.5: scale, /0.5: conclu)
+# Après avoir centré-réduit les variables on trouve les mêmes ordres relatifs pour les tailles d'effets des modèles: la relation entre poids et taille est de plus grande intensité que celle entre taille et envergure, elle même de plus grande intensité que celle entre envergure et poids.
+
+
+##### Exercice 8 #####
+
+# Explication des lignes de commandes fournies:
+
+# Ligne 1 et 2: on parcourt les numéros de colonnes du jeu de données à l'aide de deux curseurs i et j (/0.5)
+# Ligne 3: On effectue la commande en ligne 5 uniquement si les colonnes numéro i et j correspondent à des variables numériques (/0.25)
+# Ligne 4: On effectue la commande en ligne 5 uniquement si le curseur j est de valeur strictement supérieure à i, pour avoir chaque paire de variable quantitative en un unique exemplaire (/0.5)
+# Ligne 5: on affiche la régression linéaire entre la colonne i et la colonne j (variables numériques) (/0.25)
+
+# Ces commandes permettent donc d'afficher les régressions linéaires pour chaque paire de variable quantitative du jeu de données. (/0.5)
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
+
+```
+
+
+
+
+
+
+
+## Sujet Lapin S1:
+
+1) Expliquez le rôle de la fonction "str()". Faites en une application appropriée. (/1.5)
+2) Calculez les médianes et l'écart inter-quartiles du nombre de lapin échantillonné par sortie. (/1)
+3) Convertissez le nombre d'individus en variable catégorielle et trouvez le mode de cette distribution. (/1.5)
+4) La répartition des échantillonages est-elle équilibrée entre les différents sites ? Est-ce aussi le cas en considérant uniquement les échantillonnages réalisés à strictement plus de 24°C et sur des aires inférieures ou égales à 6000 m² ? (/1.5)
+5) Comparez le nombre total d'individus capturé dans des réserves de chasses et le nombre d'individus capturés en-dehors. Représentez graphiquement la distribution du nombre d'individus capturés en présence et absence de réserve de chasse. (/4)
+6) Créez une nouvelle variable contenant la densité d'individus capturés par sortie d'échantillonnage. Y a t'il une densité plus grande en moyenne dans les réserves de chasse ? (/2.5)
+7) Extraire le mois de la date d'échantillonage dans une nouvelle colonne. Donnez la température moyenne par trimestre et commentez le résultat. (/2.5)
 8) On cherche à trier les aires échantillonées par ordre croissant lors du premier échantillonnage de chaque site. Les lignes suivantes présentent plusieurs erreurs (6). Identifiez-les et proposez une correction:
 Suivi_Lapin = Suivi_lapin[order(Suivi_Lapin$Date)]
-order(Suivi_Lapin[duplicated(Suivi_Lapin$Site), Aire], increasing = T)
+order(Suivi_Lapin[duplicated(Suivi_Lapin$Site), Aire], increasing = T) 
+ (/3)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
 
 
 
 ```{r corrections sujet lapin}
 
-#### Examen: suivi de populations de lapin ####
+#### Examen: suivi de populations de lapins ####
 
 setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
 Suivi_Lapin = read.csv("Suivi_Lapin.csv")
@@ -291,93 +688,251 @@ Suivi_Lapin = read.csv("Suivi_Lapin.csv")
 
 ##### Exercice 1 #####
 
-str(Suivi_Lapin)
-# Donne la structure d'un objet R. Appliquée sur une table de donnée elle indique sa nature, sa dimension et la nature de chacune de ces colonnesainsi que leur premières valeurs.
+str(Suivi_Lapin) # /0.5 (application)
+# Donne la structure d'un objet R. Appliquée sur une table de donnée elle indique sa nature, sa dimension et la nature de chacune de ces colonnes ainsi que leur premières valeurs. 
+# /1 (fonction)
 
 
 ##### Exercice 2 #####
 
-median(Suivi_Lapin$Nombre)
-IQR(Suivi_Lapin$Nombre)
-# Le nombre de lapins médian est de 59 et l'écart inter-quartile est de 12 lapins.
+median(Suivi_Lapin$Nombre) # /0.5
+IQR(Suivi_Lapin$Nombre) # /0.5
+# Le nombre de lapins médian est de 61 et l'écart inter-quartile est de 7 lapins.
 
 
 ##### Exercice 3 #####
 
-Nombre_char = as.character(Suivi_Lapin$Nombre)
-table(Nombre_char)[table(Nombre_char)==max(table(Nombre_char))]
-# Le nombre d'individus le plus repéresnté dans les échantillonages est 58.
+Nombre_char = as.character(Suivi_Lapin$Nombre) # /0.5: conversion
+table(Nombre_char)[table(Nombre_char)==max(table(Nombre_char))] # /1 (0.5: opération / 0.5: conclusion)
+# Le nombre d'individus le plus représenté dans les échantillonages est 60.
 
 
 ##### Exercice 4 #####
 
-table(Suivi_Lapin$Site)
-table(Suivi_Lapin[Temperature > 24 & Aire <=6000, "Site"])
+table(Suivi_Lapin$Site) # /0.5 (table)
+table(Suivi_Lapin[Suivi_Lapin$Temperature > 24 & Suivi_Lapin$Aire <= 6000, "Site"]) # /0.5 (sélection)
 # L'échantillonage n'est pas équilibré entre les différents sites suivis (certains sites sont plus échantillonnés que d'autres). Cet échantillonnage est équilibré lorsqu'on considère uniquement les échantillonnages réalisés à strictement plus de 24°C et sur des aires inférieures ou égales à 6000 m² (tous les sites sont échantillonés une fois).
+# /0.5 (interprétation)
 
 
 ##### Exercice 5 #####
 
-sum(Suivi_Lapin[Suivi_Lapin$Reserve==T, "Nombre"])
-sum(Suivi_Lapin[Suivi_Lapin$Reserve==F, "Nombre"])
+sum(Suivi_Lapin[Suivi_Lapin$Reserve == T, "Nombre"]) # /0.5 (sum)
+sum(Suivi_Lapin[Suivi_Lapin$Reserve == F, "Nombre"]) # /0.5 (sélection)
 # Le nombre total de lapin est plus important en dehors des réserves de chasse
+# /0.5 (interpretation)
 
 # Représentations graphiques en absence / présence de réserve de chasse:
-boxplot(Suivi_Lapin[Suivi_Lapin$Reserve==T, "Nombre"],
+boxplot(Suivi_Lapin[Suivi_Lapin$Reserve == T, "Nombre"],
         ylab = "Nombre d'individus échantillonné",
-        main = "Répartition du nombre d'individus dans les réserves de chasse (graphique boîte à moustache)")
-boxplot(Suivi_Lapin[Suivi_Lapin$Reserve==F, "Nombre"],
+        main = "Répartition du nombre d'individus dans les réserves de chasse (graphique boîte à moustache)") # /1 (graph)
+boxplot(Suivi_Lapin[Suivi_Lapin$Reserve == F, "Nombre"],
         ylab = "Nombre d'individus échantillonné",
-        main = "Répartition du nombre d'individus hors des réserves de chasse (graphique boîte à moustache)")
+        main = "Répartition du nombre d'individus hors des réserves de chasse (graphique boîte à moustache)") # /0.5 (sélection, pour les deux graphes)
 
-hist(Suivi_Lapin[Suivi_Lapin$Reserve==T, "Nombre"],
+hist(Suivi_Lapin[Suivi_Lapin$Reserve == T, "Nombre"],
         ylab = "Effectifs",
         xlab = "Nombre d'individus échantillonné",
-        main = "Nombre d'échantillonnage par classe d'effectifs dans les réserves de chasse (histogramme)")
-hist(Suivi_Lapin[Suivi_Lapin$Reserve==F, "Nombre"],
+        main = "Nombre d'échantillonnage par classe d'effectifs dans les réserves de chasse (histogramme)") # /1 (graph)
+hist(Suivi_Lapin[Suivi_Lapin$Reserve == F, "Nombre"],
         ylab = "Effectifs",
         xlab = "Nombre d'individus échantillonné",
-        main = "Nombre d'échantillonnage par classe d'effectifs hors des réserves de chasse (histogramme)")
+        main = "Nombre d'échantillonnage par classe d'effectifs hors des réserves de chasse (histogramme)") 
 
 
 ##### Exercice 6 #####
 
-Densite = Suivi_Lapin$Nombre / Suivi_Lapin$Aire
-mean(Densite[Suivi_Lapin$Reserve==T]) > mean(Densite[Suivi_Lapin$Reserve==F])
+Densite = Suivi_Lapin$Nombre / Suivi_Lapin$Aire # /1 (0.5: creation variable, 0.5: opération)
+mean(Densite[Suivi_Lapin$Reserve==T]) > mean(Densite[Suivi_Lapin$Reserve==F]) # /1.5 (0.5: fonction, 0.5: sélection, 0.5: test logique) 
 # La densité de population est plus importante dans les réserves de chasse  
 
 
 ##### Exercice 7 #####
 
-Suivi_Lapin$Mois = as.numeric(substr(Suivi_Lapin$Date, 1, 2))
+Suivi_Lapin$Mois = as.numeric(substr(Suivi_Lapin$Date, 1, 2)) # /1 (0.5: creation variable, 0.5: extraction)
 mean(Suivi_Lapin[Suivi_Lapin$Mois %in% 1:3, "Temperature"])
 mean(Suivi_Lapin[Suivi_Lapin$Mois %in% 4:6, "Temperature"])
 mean(Suivi_Lapin[Suivi_Lapin$Mois %in% 7:9, "Temperature"])
-mean(Suivi_Lapin[Suivi_Lapin$Mois %in% 10:12, "Temperature"])
+mean(Suivi_Lapin[Suivi_Lapin$Mois %in% 10:12, "Temperature"]) # /1.5 (0.5: fonction, 0.5: sélection par catégories)
 # La température moyenne est minimale en hiver, augmente à l'automne, puis au printemps, puis en été
-
+# /0.5 (interprétation)
 
 ##### Exercice 8 #####
 
 Suivi_Lapin = Suivi_Lapin[order(Suivi_Lapin$Date),]
 sort(Suivi_Lapin[!duplicated(Suivi_Lapin$Site), "Aire"])
-# Ligne corrigée ci-dessus. Voici les 6 erreurs qui étaient présentes de gauche à droite: il manquait une majuscule sur le nom du tableau de données "Suivi_lapin" / il manquait un virgule entre crochet, après la commande, pour faire une sélection sur les lignes / la fonction pour trier un vecteur est "sort" et pas "order" / il manquant un "non" logique ("!") devant la fonction duplicated pour prendre la première occurence de chaque site / il manque des guillemets pour le nom de la colonne sélectionnée / l'argument "increasing n'existe pas pour la fonction "sort" il faut utiliser l'argument "decreasing"
+# Ligne corrigée ci-dessus. Voici les 6 erreurs qui étaient présentes de gauche à droite: il manquait une majuscule sur le nom du tableau de données "Suivi_lapin" / il manquait une virgule entre crochet, après la commande, pour faire une sélection sur les lignes / la fonction pour trier un vecteur est "sort" et pas "order" / il manquant un "non" logique ("!") devant la fonction duplicated pour prendre la première occurence de chaque site / il manque des guillemets pour le nom de la colonne sélectionnée / l'argument "increasing n'existe pas pour la fonction "sort" il faut utiliser l'argument "decreasing=F", qui est la valeur par défaut
+# 0.5 par correction d'erreur
 
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
 
 ```
 
 
-## Sujet Loup:
 
-1) Donnez les dimensions du jeu de données, indiquez ce que signifie chaque dimension en terme statistique. Quelle fonction utiliser pour récupérer les noms de colonnes du jeu de données ? (appliquez cette fonction)
-2) Démontrez que la taille et la composition d'un groupe varie avec le temps en prenant l'exemple de deux meutes que vous choisirez.
-3) Donnez la distance médiane et l'étendue des distances parcourues par les meutes de loups.
-4) Décrire la distribution des compositions de meutes statistiquement et graphiquement.
-5) Pour les meutes avec strictement moins de 4 individus, donnez la distribution des compositions de meutes et la distance médiane parcourue par ces meutes. Illustrez graphiquement ces résultats. Que pouvez-vous en conclure ?
-6) Donnez la surface moyenne du territoire des meutes. Faire de même lorsque les valeurs de distance parcourue sont strictement inférieures au premier quartile de cette série et lorsqu'elles sont strictement supérieures au troisième quartile. Que pouvez-vous en conclure ?
-7) Créez un nouveau tableau de données contenant les 10 premières et 10 dernières lignes du tableau initial et contenant uniquement les variables catégorielles décrites. Quel est le nombre de pays représenté dans ce jeu de données ? 
-8) A l'aide de la documentation R, trouvez quelle est l'utilité de la fonction "nchar", donner un exemple d'application adapté.
 
+## Sujet Lapin S2:
+
+1) Exécutez et expliquez ce que réalise la commande "sim_poiss = rpois(1000, 60)". (/1)
+2) Tracez sur un même graphique l'histogramme du nombre de lapin, la courbe de densité de la variable et la courbe représentant l'évolution de la densité de la variable "sim_poiss". Que pouvez-vous en dire ? (/2.5)
+3) Représentez graphiquement les variations de températures en fonction du mois. Donnez également les températures minimales et maximales par mois. Qu'observez-vous ? (/3)
+4) Etudiez graphiquement et (si cela est pertinent) statistiquement les relations entre nombre d'individus et aire échantillonnée et entre nombre d'individus et température. Si cela est possible, modélisez les relations par une régression linéaire et interprétez en les sorties. (/4)
+5) A l'aide d'une fonction de la famille "apply", testez si l'aire échantillonnée ou le classement en zone protégée ou non (réserve) varie au sein d'un même site. (/1.5)
+6) A l'aide d'une boucle, affichez la densité moyenne d'individu par site. (/1.5)
+7) Etudiez graphiquement l'adéquation de la distibution des densités d'individus à une loi normale, respectivement dans et en-dehors des réserves naturelles. En assumant que l'adéquation à une loi normale est respectée dans les deux cas, testez si les distributions théoriques associées sont distinctes ou non. (/2.5)
+8) A l'aide de la régression effectuée à la question 4, prédisez le nombre d'individus capturés lorsqu'on échantillonne les aires suivantes: 0.0031 et 0.0063 km². En calculant les densités à partir des nombres d'individus que vous venez de prédire et en utilisant les résultats de la question précédente, quel est le statut de protection le plus probable associé à chacune de ces deux aires ? (/1.5)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
+
+
+
+```{r corrections sujet lapin}
+
+#### Examen: suivi de populations de lapins ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Lapin = read.csv("Suivi_Lapin2.csv")
+
+
+##### Exercice 1 #####
+
+sim_poiss = rpois(1000, 60) # simulation d'un échantillon de 1000 valeurs suivant une loi de poisson de paramètre lambda égal à 60
+# /1 (/0.5: simulation loi de poisson, /0.5: paramètres)
+
+
+##### Exercice 2 #####
+
+hist(Suivi_Lapin$Nombre,
+     prob = T,
+     main = "Densité d'échantillons par classe de nombre d'individus
+     et distribution théorique simulée suivant la loi de poisson (en vert)",
+     xlab = "Nombre d'individus",
+     ylab = "Densité d'échantillonnage",
+  ) # /1
+
+lines(density(Suivi_Lapin$Nombre)) 
+lines(density(sim_poiss), col = "green") #/1 (/0.25: lines, /0.25: density, /0.25: col, /0.25: repetition)
+# La distribution de densité observée correspond plutôt bien à celle de la loi de poisson simulée: il est possible que la variable "Nombre d'individu" suive une loi de poisson de paramètre lambda égal à 60.
+# /0.5 (interpretation)
+
+
+##### Exercice 3 #####
+
+boxplot(Suivi_Lapin$Temperature ~ Suivi_Lapin$Mois,
+        xlab = "Mois",
+        ylab = "Température (°C)",
+        main = "Variation de la température en fonction du mois") #/1
+
+tapply(Suivi_Lapin$Temperature, Suivi_Lapin$Mois, min)
+tapply(Suivi_Lapin$Temperature, Suivi_Lapin$Mois, max) #/1.5 (/0.5: tapply, /0.5: min et max, /0.5: variables)
+# L'évolution de la température est très dépendante du mois (pas de recouvrement des boîtes à moustaches). On retouve des variations saisonnières: les températures augmentent de janvier à août, puis diminuent d'août à janvier.
+#/0.5
+
+
+##### Exercice 4 #####
+
+plot(Suivi_Lapin$Nombre ~ Suivi_Lapin$Aire,
+     xlab = "Aire échantillonnée (m²)",
+     ylab = "Nombre d'individus",
+     main = "Nombre d'individus en fonction de l'aire échantillonnée") # /1
+# visuellement, il semble que le nombre d'individus augmente avec l'aire échantillonnée (relation croissante), de manière linéaire (pourrait être représenté par une ligne droite). On utilisera donc une corrélation de Pearson pour décrire la relation entre les deux variables
+
+plot(Suivi_Lapin$Nombre ~ Suivi_Lapin$Temperature,
+     xlab = "Température (°C)",
+     ylab = "Nombre d'individus",
+     main = "Nombre d'individus en fonction de la température") # /1
+# on n'observe aucune relation entre le nombre d'individus et la température. Il n'est donc pas pertinent d'utiliser une mesure de corrélation ici.
+
+cor(Suivi_Lapin$Nombre, Suivi_Lapin$Aire) # /0.5
+# il existe bien une relation croissante entre les deux variables (corrélation positive), assez forte (prépondérance de la relation entre variable sur les variations internes des variables) puisque le coefficient est proche de 1
+
+
+reg_nbre_aire = lm(Nombre ~ Aire, data = Suivi_Lapin) #/0.5
+# régression linéaire entre le nombre d'individus et l'aire échantillonnée
+
+plot(reg_nbre_aire) #/0.5
+# la régression semble valide: la linéarité et l'homoscédasticité des résidus sont respectées. Aucun point d'influence fort n'est détecté.
+summary(reg_nbre_aire)$r.squared
+# 85% de la variation du nombre d'individu est expliquée par le modèle: il y a une très bonne adéquation aux données
+coefficients(reg_nbre_aire) #/0.5
+# lorsque l'aire augmente de 1000 m² on augmente le nombre d'individu d'environ 7.2
+
+
+##### Exercice 5 #####
+
+tapply(Suivi_Lapin$Aire, Suivi_Lapin$Site, var) #/1 (/0.5: tapply, /0.25: variable, /0.25: fonction)
+# l'aire échantillonnée varie bien dans chaque site
+tapply(Suivi_Lapin$Reserve, Suivi_Lapin$Site, table) #/0.5 (/0.25: variable, /0.25: fonction))
+# il n'y a aucune variation dans le statut de protection de la zone pour un même site
+
+
+##### Exercice 6 #####
+
+Suivi_Lapin$Densite = Suivi_Lapin$Nombre / Suivi_Lapin$Aire
+
+# affichage de la densité d'individus par site:
+
+for (i in unique(Suivi_Lapin$Site)) {
+  print(mean(Suivi_Lapin[Suivi_Lapin$Site == i,]$Densite))
+}
+#/1.5 (/0.5: boucle for, /0.25: unique, /0.25: print, /0.25: densité, 0.25: moyenne)
+
+
+##### Exercice 7 #####
+
+qqnorm(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite)
+qqline(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite) 
+# l'adéquation à une loi normale est plutôt bonne (la majorité des points du QQ-plot suivent une ligne droite), mais il y a un léger écart aux attendus pour les valeurs les plus extrêmes
+qqnorm(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite)
+qqline(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite) 
+# l'adéquation à une loi normale est plutôt bonne (la majorité des points du QQ-plot suivent une ligne droite), mais il y a un léger écart aux attendus pour les valeurs les plus extrêmes
+# /1.5 (/0.5: qqnorm, /0.5: qqline, /0.5: selection)
+
+# Intervalles de confiance de la densité d'individus dans et en dehors des réserves (en assumant une distribution normale de ces séries):
+c(mean(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite) - 1.96 * sd(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite), mean(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite) + 1.96 * sd(Suivi_Lapin[Suivi_Lapin$Reserve,]$Densite))
+c(mean(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite) - 1.96 * sd(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite), mean(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite) + 1.96 * sd(Suivi_Lapin[!Suivi_Lapin$Reserve,]$Densite))
+# les distributions théoriques dans en dehors des réserves ne sont pas complètement distinctes, on note toutefois que la densite d'individus est plus importante à l'intérieur des réserves qu'à l'extérieur
+# /1
+
+
+##### Exercice 8 #####
+
+predict(reg_nbre_aire, newdata =  data.frame(Aire = c(2800, 6300))) # /1 (/0.5: predict, /0.25: conversion, /0.25: newdata)
+# on prédit qu'il y aura environ 47 individus dans la première zone et 70 dans la seconde
+
+predict(reg_nbre_aire, newdata =  data.frame(Aire = c(3100, 6300))) / c(3100, 6300) #/0.5
+# la densité dans la première zone est incluse dans l'intervalle de confiance des densités en dehors des réserves mais pas dans l'intervalle de confiance des densités dans les réserves. On observe l'inverse dans la seconde zone. La première aire serait probablement non protégée tandis que la seconde le serait.
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
+
+```
+
+
+
+
+
+
+
+## Sujet Loup S1:
+
+1) Donnez les dimensions du jeu de données, indiquez ce que signifie chaque dimension en terme statistique. Quelle fonction utiliser pour récupérer les noms de colonnes du jeu de données ? (appliquez cette fonction) (/1.5)
+2) Démontrez que la taille et la composition d'une meute varie avec le temps en prenant l'exemple de deux meutes que vous choisirez. (/2.5)
+3) Donnez la distance médiane et l'étendue des distances parcourues par les meutes de loups. (/1)
+4) Décrire la distribution des compositions de meutes statistiquement et graphiquement. (/1.5)
+5) Pour les meutes avec strictement moins de 4 individus, donnez la distribution des compositions de meutes et la distance médiane parcourue par ces meutes. Illustrez graphiquement ces résultats. Que pouvez-vous en conclure ? (/4.5)
+6) Donnez la surface moyenne du territoire des meutes. Faire de même lorsque les valeurs de distance parcourue sont strictement inférieures au premier quartile de cette série et lorsqu'elles sont strictement supérieures au troisième quartile. Que pouvez-vous en conclure ? (/2.5)
+7) Créez un nouveau tableau de données contenant les 10 premières et 10 dernières lignes du tableau initial et contenant uniquement les variables catégorielles décrites. Quel est le nombre de pays représenté dans ce jeu de données ? (/2.5)
+8) A l'aide de la documentation R, trouvez quelle est l'utilité de la fonction "nchar", donner un exemple d'application adapté. (/1.5)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
 
 
 
@@ -391,111 +946,281 @@ Suivi_Loup = read.csv("Suivi_Loup.csv")
 
 ##### Exercice 1 #####
 
-dim(Suivi_Loup)
+dim(Suivi_Loup) # /0.5
 # Le jeu de données est composé de 117 lignes (individus) et de 6 colonnes (variables)
-colnames(Suivi_Loup)
+# /0.5
+colnames(Suivi_Loup) # /0.5
 # Donne le nom des colonnes du jeu de données
 
 
 ##### Exercice 2 #####
 
 var(Suivi_Loup[Identifiant_meute=="A",]$Taille_meute)
-var(Suivi_Loup[Identifiant_meute=="B",]$Taille_meute)
-# La taille des meutes A et B varie entre les rencontres, donc la taille n'est pas toujours constante au sein d'une meute
+var(Suivi_Loup[Identifiant_meute=="B",]$Taille_meute) # /1 (0.5: paramètre dispersion, 0.5: sélection)
+# Les tailles des meutes A et B varient entre les rencontres, donc la taille n'est pas toujours constante au sein d'une meute
 
 table(Suivi_Loup[Identifiant_meute=="A",]$Composition)
-table(Suivi_Loup[Identifiant_meute=="B",]$Composition)
+table(Suivi_Loup[Identifiant_meute=="B",]$Composition) # /1 (0.5: table, 0.5: sélection)
 # La composition des meutes A et B varie entre les recontres, donc la composition n'est pas toujours constante au sein d'une meute
+# /0.5 (interprétation)
 
 
 ##### Exercice 3 #####
 
-median(Suivi_Loup$Distance_parcourue)
-max(Suivi_Loup$Distance_parcourue) - min(Suivi_Loup$Distance_parcourue)
+median(Suivi_Loup$Distance_parcourue) # /0.5
+max(Suivi_Loup$Distance_parcourue) - min(Suivi_Loup$Distance_parcourue) # /0.5
 # La distance médiane parcourue par une meute entre deux rencontres est de 39.3 km et son étendue de 73.1 km
 
 
 ##### Exercice 4 #####
 
-table(Suivi_Loup$Composition)
+table(Suivi_Loup$Composition) # /0.5
 table(Suivi_Loup$Composition) / length(Suivi_Loup$Composition)
-# tables des effectifs et fréquences pour les catégories de composition de meutes, 42% des meutes sont composés uniquement d'adultes, 37% d'adultes et de juvéniles et 21% de subadultes 
+# tables des effectifs et fréquences pour les catégories de composition de meutes, 42% des meutes sont composées uniquement d'adultes, 37% d'adultes et de juvéniles et 21% de subadultes 
 
 # Représentation graphique:
 barplot(table(Suivi_Loup$Composition),
         xlab = "Composition des meutes de loups",
         ylab = "Nombre de meutes",
-        main = "Nombre de meutes par catégories de composition")
+        main = "Nombre de meutes par type de composition") # /1
 
 
 ##### Exercice 5 #####
 
-table(Suivi_Loup[Suivi_Loup$Taille_meute<4, "Composition"])
-median(Suivi_Loup[Suivi_Loup$Taille_meute<4, "Distance_parcourue"])
+table(Suivi_Loup[Suivi_Loup$Taille_meute < 4, "Composition"])
+median(Suivi_Loup[Suivi_Loup$Taille_meute < 4, "Distance_parcourue"]) # /1.5 (0.5: médiane, 0.5: table, 0.5: sélection)
 # Les meutes avec moins de 4 individus sont majoritairement composées de subadultes uniquement et parcourent des distances médianes de 56.3 km, soit bien au dessus de la médiane de l'ensemble des meutes
 # les meutes de subadultes sont donc de petites taille et parcourent beaucoup de distance, il est probable que cela soit représentatif d'un phénomène de dispersion depuis leur meute d'origine. 
+# /1 (interprétation)
 
 # Représentations graphiques:
 boxplot(Suivi_Loup[Suivi_Loup$Taille_meute<4, "Distance_parcourue"],
         ylab = "Distance parcourue (km)",
-        main = "Distribution des distances parcourues par les meutes de moins de 4 individus (graphique boîte à moustache)")
+        main = "Distribution des distances parcourues par les meutes de moins de 4 individus (graphique boîte à moustache)") # /1
 
 barplot(table(Suivi_Loup[Suivi_Loup$Taille_meute<4, "Composition"]),
         ylab = "Nombre de meutes rencontrées",
         xlab = "Composition de la meute",
-        main = "Nombre de meutes de moins de 4 individus par composition")
+        main = "Nombre de meutes de moins de 4 individus par type de composition") # /1
 
 
 ##### Exercice 6 #####
 
-mean(Suivi_Loup$Surface_territoire)
-mean(Suivi_Loup$Surface_territoire[Suivi_Loup$Distance_parcourue < quantile(Suivi_Loup$Distance_parcourue, 0.25)])
-mean(Suivi_Loup$Surface_territoire[Suivi_Loup$Distance_parcourue > quantile(Suivi_Loup$Distance_parcourue, 0.75)])
+mean(Suivi_Loup$Surface_territoire) # /0.5
+mean(Suivi_Loup$Surface_territoire[Suivi_Loup$Distance_parcourue < quantile(Suivi_Loup$Distance_parcourue, 0.25)]) # /0.5 (inferieur)
+mean(Suivi_Loup$Surface_territoire[Suivi_Loup$Distance_parcourue > quantile(Suivi_Loup$Distance_parcourue, 0.75)]) # /0.5 (superieur)
+# /0.5 (quantile)
 # La surface moyenne du territoire de la meute est largement plus petite que la moyenne de l'ensemble des meutes pour des valeurs de distance parcourues faible (premier quart) et largement plus grandes pour des valeurs de distances parcourues hautes. La distance parcourue augmente donc avec les valeurs de surface de territoire.
+# /0.5 (interpretation)
 
 
 ##### Exercice 7 #####
 
-str(Suivi_Loup)
+str(Suivi_Loup) # /0.5
 # Les variables catégorielles sont "Identifiant_meute", "Composition", "Pays"
-Suivi_Loup2 = Suivi_Loup[c(1:10, (length(Suivi_Loup$Identifiant_meute)-9):length(Suivi_Loup$Identifiant_meute)), c("Identifiant_meute", "Composition", "Pays")]
-length(unique(Suivi_Loup2$Pays))
+Suivi_Loup2 = Suivi_Loup[c(1:10, (length(Suivi_Loup$Identifiant_meute)-9):length(Suivi_Loup$Identifiant_meute)), c("Identifiant_meute", "Composition", "Pays")] # /1.5 (0.5: creation tableau, 0.5: sélection ligne, 0.5: sélection colonne)
+length(unique(Suivi_Loup2$Pays)) # /0.5
 # Il y a 5 pays représentés dans ce nouveau jeu de données
 
 
 ##### Exercice 8 #####
 
-?nchar
-nchar(Suivi_Loup$Pays)
-# nchar permet d'obtenir le nombre de caractère contenu dans chaque élément d'un vecteur de chaines de caractère. Dans l'exemple on obtient ainsi le nombre de lettre pour chaque pays contenu dans la variable "Pays".
+?nchar # /0.5
+nchar(Suivi_Loup$Pays) # /0.5
+# nchar permet d'obtenir le nombre de caractères contenu dans chaque élément d'un vecteur de chaines de caractère. Dans l'exemple on obtient ainsi le nombre de lettres pour chaque pays contenu dans la variable "Pays".
+# /0.5
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
 
 
 ```
 
 
 
-## Sujet Ours:
 
-1) Que signifient les "NA" présents dans la colonne "Gestation" ? 
-2) Créez une variable contenant les effectifs d'observations par vallée. Représentez-là graphiquement. Calculez l'effectif moyen et l'écart-type des effectifs d'observation par vallée. Que dire de la distribution de la densité en ours entre vallée ?
-3) Expliquez l'utilité de la fonction "rm()". Faites en une application adaptée.
-4) Donner l'âge médian et l'écart inter-quartile des âges des ours suivis. Faire une représentation graphique de la forme de la distribution des âges (aussi appelée pyramides des âges), le réaliser pour des intervalles d'âges de 5 ans, puis de 2 et 10 ans (aidez-vous du paramètre "breaks" de la fonction graphique pour ces deux derniers graphiques). Que pouvez-vous dire de la distribution des âges à partir de ces graphiques ?
-5) Donner le nombre d'individus de chaque sexe pour les individus juvéniles (1 ou 2 ans), subadultes (3 ans), adultes (> 3 ans, < 20 ans), âgés (> 19 ans). Que pouvez-vous dire de l'évolution du sex-ratio ?
+
+
+
+## Sujet Loup S2:
+
+1) Etudiez graphiquement et statistiquement la relation entre la distance parcourue et la surface du territoire des meutes de loups. (/1.5)
+2) Modélisez l'évolution de la distance parcourue en fonction de la surface du territoire des meutes de loups. Qu'observez vous ? (/1.5)
+3) Le responsable des suivis de terrain vous indique qu'il y a eu un problème avec l'acquisition de données de certaines balises GPS. Il vous indique que les données associées aux quatres plus petites valeurs de distance parcourue sont fausses. Refaites un modèle corrigeant cette erreur. Qu'observez-vous ? (/1.5)
+4) Etudiez graphiquement la forme de la distribution de la distance parcourue par les meutes de loups et comparez la à une distribution normale théorique. A partir de ces résultats faites une correction du biais observé sur votre précédent modèle et analysez les sorties du modèle corrigée. (/4.5)
+5) Etudiez graphiquement et statistiquement la relation entre surface du territoire et taille des meutes de loups. (/1.5)
+6) A l'aide de l'aide disponible sur R, déterminez ce que permet de réaliser la fonction "is.character()". En utilisant cette fonction, la fonction "sapply" et une structure conditionnelle créer une table d'effectif par variable catégorielle du jeu de données. (/2)
+7) Etudiez numériquement et graphiquement la relation entre compositon et pays d'observation de la meute de loups. Qu'en déduisez vous ? (/2)
+8) Que permettent de réaliser les lignes de commandes suivantes (faites une description ligne par ligne, puis une conclusion sur l'utilité de la commande dans son entièreté): (/3)
+Suivi_Loup$Identifiant_meute_evolution = NA
+for (i in unique(Suivi_Loup$Identifiant_meute)) {
+  for (j in 1:length(Suivi_Loup[Suivi_Loup$Identifiant_meute==i, 1])) {
+    if (grepl(Suivi_Loup[Suivi_Loup$Identifiant_meute==i, "Composition"][j], "Adultes")) {
+      Suivi_Loup[Suivi_Loup$Identifiant_meute==i,]$Identifiant_meute_evolution[j] = paste(i, "à maturité", sep = " ")
+    }
+    else {
+      Suivi_Loup[Suivi_Loup$Identifiant_meute==i,]$Identifiant_meute_evolution[j] = paste(i, "en formation", sep = " ")
+    }
+  }
+} 
+
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
+
+
+
+```{r corrections sujet loup}
+
+#### Examen: suivi de populations de loup ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Loup = read.csv("Suivi_Loup2.csv")
+
+
+##### Exercice 1 #####
+
+plot(Suivi_Loup$Distance_parcourue ~ Suivi_Loup$Surface_territoire,
+     main = "Distance parcourue par les meutes de loup en fonction de la surface de leur territoire",
+     xlab = "Surface du territoire (km²)",
+     ylab = "Distance parcourue (km)") # /1
+# La relation entre distance parcourue et surface du territoire est croissante et plutôt de type linéaire (léger décalage toutefois pour les valeurs de distance et de surface les plus petites). On utilisera donc une corrélation de pearson pour décrire la relation.
+
+cor(Suivi_Loup$Distance_parcourue, Suivi_Loup$Surface_territoire) # /0.5
+# Très forte corrélation positive entre les deux métriques (coefficient proche de 1): prépondérance de la relation entre variable sur les variations internes des variables
+
+
+##### Exercice 2 #####
+
+# On modélise la relation entre distance parcourue et surface du territoire par une régression linéaire:
+reg_dist_surf = lm(Suivi_Loup$Distance_parcourue ~ Suivi_Loup$Surface_territoire) # /0.5
+
+plot(reg_dist_surf) # /0.5
+# On observe une violation de l'hypothèse d'homoscédasticité et de linéarité des résidus (premier et troisième graphes), ainsi que la présence de points d'influences majeurs
+# /0.5
+
+
+##### Exercice 3 #####
+
+sort(Suivi_Loup$Distance_parcourue) # /0.5
+# les quatres plus petites valeurs de distance parcourue sont inférieures à 18km
+
+reg_dist_surf_corr = lm(Suivi_Loup[Suivi_Loup$Distance_parcourue > 18,]$Distance_parcourue ~ Suivi_Loup[Suivi_Loup$Distance_parcourue > 18,]$Surface_territoire) # /0.5 (selection)
+plot(reg_dist_surf_corr) # /0.5 (interpretation)
+# On observe toujours une violation de l'hypothèse d'homoscédasticité et de linéarité des résidus (premier et troisième graphes), mais on n'observe plus de points d'influences majeurs (on a retiré les points aberrants qui posaient problème)
+
+
+##### Exercice 4 #####
+
+hist(Suivi_Loup$Distance_parcourue,
+     prob = T,
+     main = "Densité d'échantillons par classe de dsitances parcourues
+     et distribution théorique simulée suivant une loi normale (en rouge)",
+     xlab = "Distance parcourue (km)",
+     ylab = "Densité d'échantillonnage",
+  ) # /1
+
+curve(dnorm(x, mean(Suivi_Loup$Distance_parcourue), sd(Suivi_Loup$Distance_parcourue)), add=T, col = "red") # /1 (/0.5: loi théorique, /0.5: ajout courbe)
+# La distribution des distances parcourues semble bien suivre une loi normale mais on observe un léger biais positif (queue de distribution allongée vers la droite). Pour corriger le biais de modélisation résultant de cette distribution on peut réaliser une transformation racine carré de cette variable.
+# /0.5 (identification biais)
+
+reg_dist_surf_corr_sqrt = lm(sqrt(Suivi_Loup[Suivi_Loup$Distance_parcourue > 18,]$Distance_parcourue) ~ Suivi_Loup[Suivi_Loup$Distance_parcourue > 18,]$Surface_territoire) # /0.5 (transformation)
+
+plot(reg_dist_surf_corr_sqrt) # /0.5 (validité)
+# la régression est bien valide, les prérequis sont bien respectés
+
+summary(reg_dist_surf_corr_sqrt)$r.squared # /0.5
+# 99% de la variation observée pour la distance parcourue par les meutes est expliquée par le modèle réalisé
+coefficients(reg_dist_surf_corr_sqrt) # /0.5
+# lorsque la surface du territoire augmente de 1 km², la distance parcourue augmente d'environ 300m (après transformation des données)
+
+
+##### Exercice 5 #####
+
+plot(Suivi_Loup$Surface_territoire ~ Suivi_Loup$Taille_meute,
+     main = "Surface du territoire des meutes de loups en fonction de la taille de la meute",
+     xlab = "Taille de la meute",
+     ylab = "Surface du territoire (km²)") # /1
+# La relation entre surface du territoire et taille de la meute semble monotone et décroissante mais non-linéaire. On utilisera donc une corrélation de Spearman pour décrire la relation.
+
+cor(Suivi_Loup$Surface_territoire, Suivi_Loup$Taille_meute, method = "spearman") # /0.5
+# Très forte corrélation négative entre les rangs des deux métriques: prépondérance de la relation entre variable sur les variations internes des variables
+
+
+##### Exercice 6 #####
+
+?is.character #/0.5
+# teste si un objet est de type "character ou non"
+
+sapply(Suivi_Loup, function(x) if(is.character(x)) {table(x)}) # /1.5 (/0.5: utilisation correcte sapply, /0.5: condition, /0.5: fonction)
+
+
+##### Exercice 7 #####
+
+table(Suivi_Loup$Composition, Suivi_Loup$Pays) # /0.5
+
+barplot(table(Suivi_Loup$Composition, Suivi_Loup$Pays),
+        legend.text = c("Adultes", "Adultes et juvéniles", "Subadultes"),
+        args.legend = list(title = "Composition"),
+        main = "Répartition du nombre de meutes par composition de meute et pays d'origine",
+        xlab = "Pays d'origine",
+        ylab = "Nombre d'individus",
+        beside = T) #/1
+# On observe en France une absence de meutes avec présence de juvéniles et un plus grand nombre de subadultes: il n'y a pas l'air d'avoir de reproduction sur le sol français, les loups proviendraient plutôt de la dispersion de subadultes
+# /0.5 (interprétation)
+
+
+##### Exercice 8 #####
+
+# Explication des lignes de commandes fournies:
+
+# Ligne 1: Création d'une nouvelle colonne remplie de valeur manquante dans le jeu de donnée (/0.5)
+# Ligne 2: On parcourt toutes les meutes de loups (par leur identifiant, "unique()" pemet d'éviter de les sélectionner plusieurs fois) (/0.5)
+# Ligne 3: On parcourt chaque individu dans chaque meute de loup (de 1 au nombre d'individu dans la meute de loup) (/0.25)
+# Ligne 4 et 5: si le mot adulte est présent dans la catégorie de composition de la meute alors on ajoute la valeur "ID à maturité" (on colle l'identifiant au mot "maturité" à l'aide de la fonction paste) à la nouvelle colonne (/1)
+# Ligne 7 et 8: dans le cas inverse on ajoute la valeur "ID en formation" à la nouvelle colonne (/0.25)
+
+# Ces commandes permettent donc de créer une nouvelle variable dans le jeu de données qui contiendra l'indication si la meute est en formation (uniquement composée de subadultes) ou arrivée à maturité (présence d'adultes dedans) (/0.5)
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
+
+
+```
+
+
+
+
+
+
+## Sujet Ours S1:
+
+1) Que signifient les "NA" présents dans la colonne "Gestation" ? (/1)
+2) Créez une variable contenant les effectifs d'observations par vallée. Représentez-là graphiquement. Calculez l'effectif moyen et l'écart-type des effectifs d'observation par vallée. Que dire de la distribution de la densité en ours entre vallée ? (/3.5)
+3) Expliquez l'utilité de la fonction "rm()". Faites en une application adaptée. (/1)
+4) Donner l'âge médian et l'écart inter-quartile des âges des ours suivis. Faire une représentation graphique de la forme de la distribution des âges (aussi appelée pyramides des âges), le réaliser pour des intervalles d'âges de 5 ans, puis de 2 et 10 ans (aidez-vous du paramètre "breaks" de la fonction graphique pour ces deux derniers graphiques). Que pouvez-vous dire de la distribution des âges à partir de ces graphiques ? (/3)
+5) Donner le nombre d'individus de chaque sexe pour les individus juvéniles (1 ou 2 ans), subadultes (3 ans), adultes (> 3 ans, < 20 ans), âgés (> 19 ans). Que pouvez-vous dire de l'évolution du sex-ratio ? (/3)
 6) La moyenne pondérée permet de calculer une moyenne en prenant en compte l'importance relative de chaque valeur (ou poids) dans un ensemble. Elle est calculé de la manière suivante:
 $$W=\frac{\sum_{i=1}^{n}w_{i}X_{i}}{\sum_{i=1}^{n}w_{i}}$$
 W	= 	moyenne pondérée
 n	= 	nombre de valeurs
 $$w_{i}$$	= 	poids appliqués aux valeurs X
 $$X_{i}$$	= 	valeurs
-Reproduisez cette fonction dans R.
-7) Appliquez la fonction de moyenne pondérée au nombre de prédation par ours, en considérant que l'importance relative est ici représentée par le poids de l'individu (remarque la fonction "weighted.mean()" fournit dans la base de R calcule également une moyenne pondérée). Comparez cette valeur (prenant donc en fait que les individus plus lourd mange probablement plus et donc prédate plus que les individus plus léger) à la moyenne du nombre de prédation.
-8) Expliquez ce que réalise la ligne suivante: "c(range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==T, "Nombre_predation"]), range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==F, "Nombre_predation"]))"
+Reproduisez cette fonction dans R. (/2)
+7) Appliquez la fonction de moyenne pondérée au nombre de prédation par ours, en considérant que l'importance relative est ici représentée par le poids de l'individu (remarque la fonction "weighted.mean()" fournit dans la base de R calcule également une moyenne pondérée). Comparez cette valeur (prenant donc en fait que les individus plus lourd mange probablement plus et donc prédate plus que les individus plus léger) à la moyenne du nombre de prédation. (/1.5)
+8) Expliquez ce que réalise la ligne suivante: "c(range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==T, "Nombre_predation"]), range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==F, "Nombre_predation"]))" (/2.5)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
 
 
 
 ```{r corrections sujet ours}
 
-#### Examen: suivi de populations de ours ####
+#### Examen: suivi de populations d'ours ####
 
 setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
 Suivi_Ours = read.csv("Suivi_Ours.csv")
@@ -504,51 +1229,55 @@ Suivi_Ours = read.csv("Suivi_Ours.csv")
 ##### Exercice 1 #####
 
 Suivi_Ours$Gestation
-# Les "NA" signifie "Not available" dans R et correspondent à des valeurs manquantes, dans le cas présent les NA sont attribués à des mâles ou de jeunes individus immature, qui ne peuvent donc pas être en gestation.
+# Les "NA" signifient "Not available" dans R et correspondent à des valeurs manquantes, dans le cas présent les NA sont attribués à des mâles ou de jeunes individus immatures, qui ne peuvent donc pas être en gestation.
+# /1 (0.5: signification, 0.5: interpretation)
 
 
 ##### Exercice 2 #####
 
-Effectifs_vallee = table(Suivi_Ours$Identifiant_vallee)
-mean(Effectifs_vallee)
-sd(Effectifs_vallee)
-# table des effectifs d'ours observés par vallée. Les effectifs sont hétérogènes entre les vallées (en moyenne 10 ours observés, avec un écart-type de 4 ours), révélant une distribution spatiale hétérogène avec des vallées à population plus denses que d'autres.
+Effectifs_vallee = table(Suivi_Ours$Identifiant_vallee) # /1 (0.5: creation variable, 0.5: table)
+mean(Effectifs_vallee) # /0.5
+sd(Effectifs_vallee) # /0.5
+# Table des effectifs d'ours observés par vallée. Les effectifs sont hétérogènes entre les vallées (en moyenne 10 ours observés, avec un écart-type de 4 ours), révélant une distribution spatiale hétérogène avec des vallées à population plus denses que d'autres.
+# /0.5
 
 # représentation graphique:
 barplot(Effectifs_vallee,
         ylab = "Nombre d'ours observés",
         xlab = "Identifiants de vallées",
-        main = "Nombre d'ours par vallée")
+        main = "Nombre d'ours par vallée") # /1
 
 
 ##### Exercice 3 #####
 
-rm(Effectifs_vallee)
+rm(Effectifs_vallee) # /0.5
 # la fonction "rm()" permet de supprimer des objets R de l'environnement de travail. On peut ici par exemple supprimer la variable créée précédemment dont on a plus l'utilité pour la suite pour éviter d'encombrer la mémoire vive et éviter des conflits dans les dénominations de variables.
+# /0.5
 
 
 ##### Exercice 4 #####
 
-median(Suivi_Ours$Age)
-IQR(Suivi_Ours$Age)
+median(Suivi_Ours$Age) # /0.5
+IQR(Suivi_Ours$Age) # /0.5
 # l'âge médian des ours observés est de 7 ans et l'écart inter-quartile de 15 ans
 
 # Représentation graphique:
 hist(Suivi_Ours$Age,
         xlab = "Nombres d'ours",
         ylab = "Âge (en an)",
-        main = "Nombre d'ours par classe d'âge (histogramme)")
+        main = "Nombre d'ours par classe d'âge (histogramme)") # /1
 hist(Suivi_Ours$Age,
         xlab = "Nombres d'ours",
         ylab = "Âge (en an)",
         main = "Nombre d'ours par classe d'âge (histogramme)",
-     breaks = 18)
+     breaks = 18) 
 hist(Suivi_Ours$Age,
         xlab = "Nombres d'ours",
         ylab = "Âge (en an)",
         main = "Nombre d'ours par classe d'âge (histogramme)", 
-     breaks = 4)
-# Le nombre d'individus présente un pic d'effectifs pour les juvéniles (1-2 ans), puis diminue grandement lorsque l'on considère les subadultes (3-4 ans) et de nouveau lorsque l'on considère les individus adultes (>4 ans), le nombre d'individus âgés (>19 ans) diminue également par rapport aux autres âges adultes.
+     breaks = 4) # /0.5 (breaks)
+# On observe un pic d'effectif pour les juvéniles (1-2 ans), celui-ci diminue grandement lorsque l'on considère les subadultes (3-4 ans) et de nouveau lorsque l'on considère les individus adultes (>4 ans), le nombre d'individus âgés (>19 ans) diminue également par rapport aux autres âges adultes.
+# /0.5 (interprétation)
 
 
 ##### Exercice 5 #####
@@ -556,60 +1285,233 @@ hist(Suivi_Ours$Age,
 table(Suivi_Ours[Suivi_Ours$Age %in% 1:2,]$Sexe)
 table(Suivi_Ours[Suivi_Ours$Age == 3,]$Sexe)
 table(Suivi_Ours[Suivi_Ours$Age > 3 & Suivi_Ours$Age <20,]$Sexe)
-table(Suivi_Ours[Suivi_Ours$Age > 19,]$Sexe)
+table(Suivi_Ours[Suivi_Ours$Age > 19,]$Sexe) # 2.5 (0.5: table, puis 0.5 par sélection)
 # Chez les juvéniles le sex-ratio est biaisé vers les mâles, chez les subadultes il est équilibré, il devient biaisé vers les femelles à l'âge adulte, et ce assez largement chez les individus les plus âgés. Cela peut s'expliquer par deux phénomènes: une mortalité juvénile plus élevée chez les mâles et une plus grande espérance de vie chez les femelles.
+# /0.5 (interpretation)
 
 
 ##### Exercice 6 #####
 
 moyenne_pond = function(x, w) {
   sum(x * w) / sum(w)
-}
-# fonction calculant une moyenne pondéré avec x un vecteur de valeur numérique et w un vecteur de poids (numérique) associés
+} # /2 (1: syntaxe, 1: opération)
+# fonction calculant une moyenne pondéré avec un vecteur de valeurs numérique (x) et un vecteur de poids (numérique) associés (w)
 
 
 ##### Exercice 7 #####
 
-moyenne_pond(Suivi_Ours$Nombre_predation, Suivi_Ours$Poids)
+moyenne_pond(Suivi_Ours$Nombre_predation, Suivi_Ours$Poids) # /0.5
 weighted.mean(Suivi_Ours$Nombre_predation, Suivi_Ours$Poids)
-mean(Suivi_Ours$Nombre_predation)
+mean(Suivi_Ours$Nombre_predation) # /0.5
 # Le nombre de prédation moyen augmente lorsque l'on considère une pondération par le poids des individus, c'est à dire lorsqu'on corrige le nombre de prédation pour les besoins de chaque individu
+# /0.5
 
 
 ##### Exercice 8 #####
 
 c(range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==T, "Nombre_predation"]), range(Suivi_Ours[!is.na(Suivi_Ours$Gestation) & Suivi_Ours$Gestation==F, "Nombre_predation"]))
-# cette ligne permet de stocker dans un même vecteur le nombre de prédation mnimal et maximal pour les femelles matures en gestation ou non.
+# cette ligne permet de stocker dans un même vecteur (/0.5) le nombre de prédation minimal et maximal (/0.5) pour les femelles matures (/0.5) en gestation ou non ( /1).
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
 
 
 ```
 
 
 
-## Sujet Rainette:
+
+
+
+
+## Sujet Ours S2:
+
+1) Estimez graphiquement si le poids des ours suit une distribution normale ou non. (/1)
+2) Explorez graphiquement et statistiquement la relation entre le poids des ours et le nombre de prédations qui leur est attribué. (/1.5)
+3) Modélisez le poids des ours en fonction du nombre de prédations qui leur est attribué. Représentez graphiquement cette régression et analysez-en les sorties. (/2.5)
+4) Codez par vous-mêmes la fonction permettant de calculer le coefficient de détermination d'une régression linéaire entre deux variables. Testez cette fonction sur votre précédent modèle. (/2)
+Rappel:
+$$R^2=\frac{\sum_{i=1}^{n}e_{i}^2}{\sum_{i=1}^{n}(y_{i}-\bar{y})^2}$$
+e	= résidus de la régression linéaire
+y	= valeurs de la variable réponse (vecteur numérique)
+5) A l'aide d'une boucle, créer une variable représentant la classe d'âge des individus, avec quatres classes d'âge possibles: juvéniles (1 ou 2 ans), subadultes (3 ans), adultes (> 3 ans, < 20 ans), âgés (> 19 ans). (/2.5)
+6) Etudiez statistiquement et graphiquement la relation entre la classe d'âge des individus (à l'aide de la variable nouvellement créée) et sexe des individus (pour le graphique: ordonnez temporellement les classes d'âges en abscisse à l'aide de la fonction "factor()" et de l'argument "levels ="). Que pouvez-vous en conclure (décrire et interprétez les résultats) ? (/3)
+7) On cherche à identifier les vallées dans lesquelles la présence de l'ours est viable. Plusieurs critères entrent en compte pour identifier de telles vallées: il faut que le sex ratio (nombre de mâles / nombre d'individus total) dans la vallée soit équilibré (compris entre 0.4 et 0.6), qu'au moins un quart de la population soit en âge de se reproduire (classe d'âge "adultes"), qu'au moins une femelle gestante y ait été détecté, et qu'une condition physique moyenne supérieure à la moyenne de l'ensemble de la population soit observé. A l'aide d'une fonction de la famille "apply", testez chacune de ces conditions une à une, puis testez quelles populations sont viables. (/5)
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
+
+
+
+```{r corrections sujet ours}
+
+#### Examen: suivi de populations d'ours ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Ours = read.csv("Suivi_Ours2.csv")
+
+
+##### Exercice 1 #####
+
+qqnorm(Suivi_Ours$Poids)
+qqline(Suivi_Ours$Poids)
+# L'adéquation à une loi normale est plutôt bonne (les quantiles observés sont globalement proportionnels aux quantiles théoriques), avec toutefois des écarts à la distribution théorique observés pour les valeurs les plus extrêmes
+# /1
+
+
+##### Exercice 2 #####
+
+plot(Suivi_Ours$Poids ~ Suivi_Ours$Nombre_predation,
+     main = "Poids des ours en fonction de leur nombre de prédation",
+     xlab = "Nombre de prédation attribué à l'ours",
+     ylab = "Poids de l'ours (kg)") # /1
+# On observe une relation croissante entre les deux variables (le poids des ours augmente lorsque le nombre de prédation augmente) et qui semble linéaire. On utilisera donc une corrélation de Pearson pour décrire cette relation.
+
+cor(Suivi_Ours$Poids, Suivi_Ours$Nombre_predation) # /0.5
+# on observe une forte corrélation positive entre les deux variables (coefficient proche de 1): forte prépondérance de la relation entre variable sur les variations internes des variables
+
+
+##### Exercice 3 #####
+
+reg_poids_pred = lm(Suivi_Ours$Poids ~ Suivi_Ours$Nombre_predation) #/0.5
+
+plot(reg_poids_pred) #/0.5
+# les hypothèses requises pour effectuer la régression linéaire semblent respectées (homoscédasticité et linéairité des résidus), et il n'y a pas de points d'influence forts
+
+plot(Suivi_Ours$Poids ~ Suivi_Ours$Nombre_predation,
+     main = "Poids des ours en fonction de leur nombre de prédation
+     (avec la régression linéaire associée, en rouge)",
+     xlab = "Nombre de prédation attribué à l'ours",
+     ylab = "Poids de l'ours (kg)") 
+
+abline(reg_poids_pred, col = "red") # /0.5
+
+
+summary(reg_poids_pred)$r.squared #/0.5
+coefficients((reg_poids_pred)) #/0.5
+# 93% de la variation du poids des ours est expliquée par notre modèle: on a une très bonne adéquation aux données
+# Lorsque le nombre de prédation augmente de 1, on a une augmentation du poids de 24.6 kg d'après la régression linéaire. Le poids de l'ours impacte probablement le nombre de proies qu'il capture, ce nombre de proies pourrait lui même impacter la croissance de l'ours et donc son poids.
+
+
+##### Exercice 4 #####
+
+r_squared <- function(x, y) {
+  1 - (sum(residuals(lm(y ~ x))^2) / sum((y - mean(y))^2))
+} # /1.75 (0.5: fonction, 0.5: residuals, 0.75: sum + carré + opération)
+# Fonction permettant de calculer le coefficient de détermination d'une régression linéaire.  
+
+r_squared(Suivi_Ours$Nombre_predation, Suivi_Ours$Poids) #/0.25
+# on obtient bien le même résultat que précédemment
+
+
+##### Exercice 5 #####
+
+classe_age = c() # /0.5
+
+for (i in Suivi_Ours$Age) {
+  if (i < 3) { 
+    classe_age = c(classe_age, "Juvénile")
+  }
+  else if (i == 3) {
+    classe_age = c(classe_age, "Subadulte")
+  } 
+  else if (i < 20) {
+    classe_age = c(classe_age, "Adulte")
+  }
+  else {
+    classe_age = c(classe_age, "Âgé")
+  }
+} # / (boucle: 0.5, strutcure condition: 0.5, condition: 0.5, stockage variable: 0.5)
+# création d'une variable contenant la classe d'âge de chaque individu
+
+
+##### Exercice 6 #####
+
+table(classe_age, Suivi_Ours$Sexe) #/0.5
+
+barplot(table(Suivi_Ours$Sexe, 
+              factor(classe_age, levels = c("Juvénile", "Subadulte", "Adulte", "Âgé"))),
+        legend.text = c("Femelle", "Mâle"),
+        args.legend = list(title = "Sexe"),
+        main = "Répartition du nombre d'ours par sexe et classe d'âge",
+        xlab = "Classe d'âge",
+        ylab = "Nombre d'individus",
+        beside = T) #/1.5 (plot: 1.5, order: 0.5)
+
+# On observe que le sex-ratio passe d'un léger déséquilibre vers les mâles à un léger déséquilibre vers les femelles avec l'âge. Cela peut être dû à une mortalité plus élevée des mâles à leur jeune âge et/ou à une longévité plus élevée des femelles. 
+# /1
+
+
+##### Exercice 7 #####
+
+# On teste les conditions de viabilité de la vallée une à une:
+
+test_sex_ratio = tapply(Suivi_Ours$Sexe, Suivi_Ours$Identifiant_vallee, function(x) {
+  SR = length(x[x=="Mâle"]) / length(x)
+  SR > 0.4 & SR <0.6
+}) # /1 (0.5: sex ratio: 0.5: test)
+
+test_age = tapply(classe_age, Suivi_Ours$Identifiant_vallee, function(x) {
+  repro = length(x[x=="Adulte"]) / length(x)
+  repro > 0.25
+}) # /1 (0.5: prop: 0.5: test)
+#/1: bonne utilisation des tapply (syntaxe, variables, fonction)
+
+
+test_gest = tapply(Suivi_Ours$Gestation, Suivi_Ours$Identifiant_vallee, function(x) sum(x, na.rm = T) > 1) #/1 (0.5: test, 0.5: sélection, sans NA)
+
+test_cond = tapply(Suivi_Ours$Poids, Suivi_Ours$Identifiant_vallee, function(x) mean(x) > mean(Suivi_Ours$Poids)) #/0.5
+
+
+test_sex_ratio & test_age & test_gest & test_cond # /0.5
+# Seules les populations F et I sont viables suivant les critères qui ont été définis.
+
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
+
+
+```
+
+
+
+
+
+
+
+
+
+
+## Sujet Rainette S1:
 
 
 1) Expliquez ce que fait la ligne suivante (en décrivant l'utilité de chaque fonction utilisée): "Categories_Taille = as.character(round(Suivi_Rainette$Taille))"
-Exécutez cette ligne et donnez le mode et une représentation graphique adaptée de la variable nouvellement créée.
-2) Calculez les distances médianes, moyennes, minimale et maximale à la mare. Recalculez les distances moyenne et médiane à la mare après avoir retiré la ou les valeurs aberrantes. Comparez les valeurs moyennes et médianes et expliquez les différences observées.
+Exécutez cette ligne et donnez le mode et une représentation graphique adaptée de la variable nouvellement créée. (/3.5)
+2) Calculez les distances médianes, moyennes, minimale et maximale à la mare. Recalculez les distances moyenne et médiane à la mare après avoir retiré la ou les valeurs aberrantes. Comparez les valeurs moyennes et médianes et expliquez les différences observées. (/3)
 3) L'écart absolu médian (median absolute deviation ou MAD en anglais) est une métrique mesurant la dispersion d'une série statistique basée sur la médiane. Elle est définie comme suit:
 $$MAD=median(\displaystyle\left\lvert X_{i} - median(X) \displaystyle\right\rvert)$$
 MAD: Ecart absolu médian
 $$X_{i}$$	= 	valeurs numériques
 X = ensemble des valeurs numériques
-Reproduisez cette fonction dans R.
-4) Comparez la variance et l'écart absolu médian des distances à la mare. Faites de même sans la ou les valeurs aberrantes. Que pouvez-vous dire de l'utilité d'utiliser l'écart absolu médian par rapport à la variance ?
-5) Sachant que l'aire d'un cercle est calculée de la manière suivante: $\pi R^2$ et que la valeur $\pi$ peut être appelée dans R à l'aide de la commande "pi", décrire graphiquement la densité d'arbre par m².
-6) Exécutez cette ligne et expliquez son utilité: "Suivi_Rainette$Type_Route = factor(Type_Route, levels = c("Route communale", "Route départementale", "Route nationale", "Autoroute"))" (Attention: cette ligne doit être exécutée pour le bon déroulé des exercices suivants).
-7) Calculez la fréquence cumulée des observations à proximité des différents type de route. Que pouvez-vous en déduire ? (sachant que chaque site a été échantillonné avec le même effort)
-8) Comparez les effectifs de ponte pour chaque type de route à proximité, que pouvez vous en conclure ?
+Reproduisez cette fonction dans R. (/2)
+4) Comparez la variance et l'écart absolu médian des distances à la mare. Faites de même sans la ou les valeurs aberrantes. Que pouvez-vous dire de l'utilité d'utiliser l'écart absolu médian par rapport à la variance ? (/2)
+5) Sachant que l'aire d'un cercle est calculée de la manière suivante: $\pi R^2$ et que la valeur $\pi$ peut être appelée dans R à l'aide de la commande "pi", décrire graphiquement la densité d'arbre par m². (/2.5)
+6) Exécutez cette ligne et expliquez son utilité: "Suivi_Rainette$Type_Route = factor(Suivi_Rainette$Type_Route, levels = c("Route communale", "Route départementale", "Route nationale", "Autoroute"))" (Attention: cette ligne doit être exécutée pour le bon déroulé des exercices suivants). (/1.5)
+7) Calculez la fréquence cumulée des observations à proximité des différents type de route. Que pouvez-vous en déduire ? (sachant que chaque site a été échantillonné avec le même effort) (/1.5)
+8) Comparez les effectifs de ponte pour chaque type de route à proximité, que pouvez vous en conclure ? (/1.5)
 
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
 
 
 
 ```{r corrections sujet rainette}
 
-#### Examen: suivi de populations de ours ####
+#### Examen: suivi de rainettes vertes ####
 
 setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
 Suivi_Rainette = read.csv("Suivi_Rainette.csv")
@@ -617,83 +1519,861 @@ Suivi_Rainette = read.csv("Suivi_Rainette.csv")
 
 ##### Exercice 1 #####
 
-Categories_Taille = as.character(round(Suivi_Rainette$Taille))
-# cette ligne permet de stocker les catégories de taille dans une variable, ces catégories sont obtenues en arrondissant à l'unité (round) la taille des individus puis en les convertissant en chaine de caractère (as.character)
+Categories_Taille = as.character(round(Suivi_Rainette$Taille)) # /1.5
+# cette ligne permet de stocker les catégories de taille dans une variable (/0.5), ces catégories sont obtenues en arrondissant à l'unité (round, /0.5) la taille des individus puis en les convertissant en chaine de caractère (as.character, /0.5).
 
-table(Categories_Taille)
-# le mode de cette série est la classe de taille de 5cm
+table(Categories_Taille) # /0.5
+# Le mode de cette série est la classe de taille de 5cm.
+# /0.5
 
-#représentatation graphique:
+#représentation graphique:
 barplot(table(Categories_Taille),
         xlab = "Catégories de taille (valeurs arrondies au cm)",
         ylab = "Nombre de rainettes",
-        main = "Nombres de rainettes par catégories de taille")
+        main = "Nombres de rainettes par catégories de taille") # /1
 
 
 ##### Exercice 2 #####
 
-mean(Suivi_Rainette$Distance_mare)
-median(Suivi_Rainette$Distance_mare)
-min(Suivi_Rainette$Distance_mare)
-max(Suivi_Rainette$Distance_mare)
+mean(Suivi_Rainette$Distance_mare) # /0.5
+median(Suivi_Rainette$Distance_mare) # /0.5
+min(Suivi_Rainette$Distance_mare) # /0.5
+max(Suivi_Rainette$Distance_mare) # /0.5
 
-mean(Suivi_Rainette[Suivi_Rainette$Distance_mare!=396,]$Distance_mare)
-median(Suivi_Rainette[Suivi_Rainette$Distance_mare!=396,]$Distance_mare)
+mean(Suivi_Rainette[Suivi_Rainette$Distance_mare != 396,]$Distance_mare)
+median(Suivi_Rainette[Suivi_Rainette$Distance_mare != 396,]$Distance_mare) # /0.5 (supression valeur aberrante)
 # La valeur moyenne est très supérieure à la valeur médiane du fait de la présence d'une valeur aberrante (la valeur maximale). Lorsqu'on supprime cette dernière on retrouve une moyenne relativement proche de la médiane.
+# /0.5
 
 
 ##### Exercice 3 #####
 
 MAD <- function(x) {
   median(abs(x-median(x)))
-}
-# fonction calculant l'écart absolu médian
+} # /2 (1: syntaxe, 1: operation)
+# Fonction calculant l'écart absolu médian.
 
 
 ##### Exercice 4 #####
 
-var(Suivi_Rainette$Distance_mare)
-MAD(Suivi_Rainette$Distance_mare)
+var(Suivi_Rainette$Distance_mare) # /0.5
+MAD(Suivi_Rainette$Distance_mare) # /0.5
 
-var(Suivi_Rainette[Suivi_Rainette$Distance_mare!=396,]$Distance_mare)
-MAD(Suivi_Rainette[Suivi_Rainette$Distance_mare!=396,]$Distance_mare)
-# contrairement à la variance l'écart absolu médian ne varie pas en présence ou en absence de la valeur aberrante, elle est robuste à ce type de valeurs 
+var(Suivi_Rainette[Suivi_Rainette$Distance_mare != 396,]$Distance_mare)
+MAD(Suivi_Rainette[Suivi_Rainette$Distance_mare != 396,]$Distance_mare) # /0.5 (supression valeur aberrante)
+# Contrairement à la variance l'écart absolu médian ne varie pas en présence ou en absence de la valeur aberrante, elle est robuste à ce type de valeurs.
+# /0.5 (interprétation)
 
 
 ##### Exercice 5 #####
 
-Densite_arbres = Suivi_Rainette$Nbre_arbre_rayon / (pi * 5^2)
-# création d'une variable égale à la densité d'arbre au mètre carré dans le rayon de 5m autour du lieu de capture de la rainette
+Densite_arbres = Suivi_Rainette$Nbre_arbre_rayon / (pi * 5^2) # /0.5
+# Création d'une variable égale à la densité d'arbre au mètre carré dans le rayon de 5m autour du lieu de capture de la rainette.
 
 # représentations graphiques:
 hist(Densite_arbres,
      xlab = "Densité d'arbres (nombre au m²)",
      ylab = "Nombre d'individus",
-     main = "Nombre d'indidividu par classe de densité d'arbre")
+     main = "Nombre d'indidividus par classe de densité d'arbre") # /1
 boxplot(Densite_arbres,
      ylab = "Densité d'arbres (nombre au m²)",
-     main = "Distribution des densités d'arbre autour des points de capture")
+     main = "Distribution des densités d'arbres autour des points de capture") # /1
 
 
 ##### Exercice 6 #####
 
-Suivi_Rainette$Type_Route = factor(Type_Route, levels = c("Route communale", "Route départementale", "Route nationale", "Autoroute"))
-# Cette commande permet de transformer la variable "Type_route" en variable catégorielle ordinale ("factor"), les levels permettent de donner l'ordre d'importance des catégories les unes par rapport aux autres.
+Suivi_Rainette$Type_Route = factor(Suivi_Rainette$Type_Route, levels = c("Route communale", "Route départementale", "Route nationale", "Autoroute"))
+# Cette commande permet de transformer la colonne (variable) "Type_route" (/0.5) en variable catégorielle ordinale ("factor", /0.5), les levels permettent de donner l'ordre d'importance des catégories les unes par rapport aux autres (/0.5).
 
 
 ##### Exercice 7 #####
 
-cumsum( table(Suivi_Rainette$Type_Route) / length(Suivi_Rainette$Type_Route))
-# Le nombre de prédation moyen augmente lorsque l'on considère une pondération par le poids des individus, c'est à dire lorsqu'on corrige le nombre de prédation pour les besoins de chaque individu
+cumsum( table(Suivi_Rainette$Type_Route) / length(Suivi_Rainette$Type_Route)) # /1 (0.5: freq, 0.5: cumul)
+# Plus la taille de la route augmente et plus le nombre de rainette diminue. Cela signifie qu'il y a un moins grand nombre de rainettes à proximité des routes de taille plus importante puisque l'effort de capture est constant, probablement du fait d'une plus haute mortalité.
+# /0.5
 
 
 ##### Exercice 8 #####
 
-table(Suivi_Rainette[Suivi_Rainette$Ponte==T, ]$Type_Route)
-table(Suivi_Rainette[Suivi_Rainette$Ponte==F, ]$Type_Route)
-# On observe que la proportion d'individu sans ponte augmente avec l'importance des routes, mettant probablement en évidence un impact de celles-ci sur les capacités de individus à se reproduire (plus haute mortalité, fragmentation habitat, nuisance sonores...)
+table(Suivi_Rainette[Suivi_Rainette$Ponte == T, ]$Type_Route)
+table(Suivi_Rainette[Suivi_Rainette$Ponte == F, ]$Type_Route) # /1 (0.5: table, 0.5: sélection)
+# On observe que la proportion d'individu sans ponte augmente avec l'importance de la taille des routes, mettant probablement en évidence un impact de celles-ci sur les capacités de individu à se reproduire (plus haute mortalité, fragmentation habitat, nuisances sonores...)
+# /0.5
+
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
 
 
 ```
+
+
+
+
+
+
+
+## Sujet Rainette S2:
+
+
+1) A l'aide de la fonction sapply donnez pour chaque colonne la classe de la variable. (/1)
+2) Décrire graphiquement et statistiquement la relation entre distance de la mare et taille des individus capturés. Pouvez vous modéliser cette relation à l'aide d'une régression linéaire ? (/1.5)
+3) Ce type de relation (sigmoïde) est linéarisable à l'aide d'une fonction logit. A partir de la formule fournie ci-dessous créez cette fonction dans R. (/1.5)
+$$logit(x) = log(\frac{x}{1-x})$$
+4) En linéarisant la relation, modélisez l'évolution de la distance à la mare la plus proche en fonction de la taille des individus capturés. Représentez graphiquement le modèle obtenu et analysez-en les sorties. (/4)
+5) Graphiquement, explorez la relation entre type de route et nombre d'arbre à proximité du point de capture puis entre type de route et présence de ponte ou non. Qu'observez vous ? Quelles conclusions/hypothèses pourriez vous formuler pour expliquer ces relations ? Peut-on conclure à des liens de cause à effet ? (/4)
+6) Comparez les résumés statistiques sur le nombre d'arbre à proximité du point de capture en présence de ponte ou non, et ce pour chaque type de route (en utilisant une boucle à cette fin). Les amplitudes (ou étendues) des distributions varient-elles entre présence ou absence de ponte au sein de chaque type de route ? Que pouvez-vous en conclure ? (/2.5)
+7) En utilisant l'aide fournie par R, expliquez ce que permet de réaliser la fonction "replicate()". (/0.5)
+8) Expliquez ce que réalisent les commandes suivantes (faites une description ligne par ligne, puis une conclusion sur l'utilité de la commande dans son entièreté): (/2.5)
+Suivi_Rainette$Descriptif_env_route = NA
+for (i in unique(Suivi_Rainette$Type_Route)) {
+  Suivi_Rainette[Suivi_Rainette$Type_Route==i,]$Descriptif_env_route = 
+    replicate(length(Suivi_Rainette$Type_Route[Suivi_Rainette$Type_Route==i]),
+                paste("Nombre d'arbre moyen:", round(mean(Suivi_Rainette[Suivi_Rainette$Type_Route==i, "Nbre_arbre_rayon"]), 2), "/ Distance moyenne à la mare (en km):", round(mean(Suivi_Rainette[Suivi_Rainette$Type_Route==i, "Distance_mare"]), 2), sep = " ")
+    )
+}
+
+
+Soin: /2.5 (dont ouverture: 0.5 / titre et section: 0.5 / commentaires: 0.5 / espacement: 0.5 / nomination: 0.5)
+
+
+```{r corrections sujet rainette}
+
+#### Examen: suivi de rainettes vertes ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Rainette = read.csv("Suivi_Rainette2.csv")
+
+
+
+##### Exercice 1 #####
+
+sapply(Suivi_Rainette, class) # /1 
+# les variables "Distance_mare" et "Taille" sont des nombres réels, la variable "Nbre_arbre_rayon" est un nombre entier, la variable "Ponte" est un booléen, la variable Type_Route" est une variable ordinale.
+
+
+##### Exercice 2 #####
+
+plot(Suivi_Rainette$Distance_mare ~ Suivi_Rainette$Taille,
+     main = "Distance à la mare en fonction de la taille des rainettes",
+     xlab = "Taille (cm)",
+     ylab = "Distance de la mare la plus proche du point de capture (en km)")  # /1
+# On observe une relation croissante entre les deux variables mais non linéaire (forme de sigmoïde). On utilisera donc une corrélation de Spearman pour la description statistique de la relation.
+
+cor(Suivi_Rainette$Distance_mare, Suivi_Rainette$Taille, method = "spearman")  # /0.5
+# Très forte corrélation négative entre les rangs des deux métriques (coefficient proche de 1): prépondérance de la relation entre variable sur les variations internes des variables
+
+
+##### Exercice 3 #####
+
+logit <- function(x) {
+  log(x / (1-x))
+} # /1.5 (1: syntaxe, 0.5: operation)
+# Fonction calculant la transformation logit d'un vecteur numérique.
+
+
+##### Exercice 4 #####
+
+reg_dist_taille_logit = lm(logit(Suivi_Rainette$Distance_mare) ~ Suivi_Rainette$Taille) # /1 (0.5: transformation, 0.5: reg)
+# régression linéaire entre la distance à la mare (transformation logit) et la taille des individus
+
+plot(reg_dist_taille_logit) # /1 (0.5: validation, 0.5: limite)
+# la régression semble valide, il y a toutefois un biais de linéarité et d'homoscédasticité des résidus assez visible sur les premier et troisème graphiques, notamment pour les valeurs aux extrémités de la distribution des distances à la mare. On n'observe pas de points d'influence majeurs. 
+
+# illustration graphique de la régression:
+
+plot(logit(Suivi_Rainette$Distance_mare) ~ Suivi_Rainette$Taille,
+     main = "Distance à la mare (transformation logit) en fonction de la taille des rainettes 
+     (avec la régression linéaire associée, en rouge)",
+     xlab = "Taille (cm)",
+     ylab = "Distance de la mare la plus proche du point de capture (en km)")
+
+abline(reg_dist_taille_logit, col = "red") # /1 (0.5: transo, 0.5: abline)
+
+
+summary(reg_dist_taille_logit)$r.squared #/0.5
+# 93% de la variation de la transformation logit de la distance à la mare est expliquée par la régression: on a une très bonne adéquation aux données
+coefficients(reg_dist_taille_logit) #/0.5
+# lorque la taille des individus augmente de 1cm le logit de la distance à la mare la plus proche augmente de 5.4 environ
+
+
+##### Exercice 5 #####
+
+boxplot(Suivi_Rainette$Nbre_arbre_rayon ~ Suivi_Rainette$Type_Route,
+        xlab = "Nombre d'arbre dans un rayon de 5m",
+        ylab = "Type de route",
+        main = "Variation du nombre d'arbre autour du point de capture 
+        en fonction du type de route à proximité") #/1
+
+barplot(table(Suivi_Rainette$Ponte, Suivi_Rainette$Type_Route),
+        legend.text = c("Non", "Oui"),
+        args.legend = list(title = "Présence de ponte ?"),
+        main = "Répartition du nombre d'individus par présence de ponte et par type de route",
+        xlab = "Type de route à proximité du point de capture",
+        ylab = "Nombre d'individus",
+        beside = T) #/1
+
+# On observe que la nombre d'arbre médian diminue lorsqu'on passe sur des routes plus importantes, les distributions semblent distinctes les unes des autres (pas de recouvrement entre les boîtes à moustaches). On observe que le nombre d'individus capturés et la proportion de ponte observée diminuent avec la taille des routes. 
+# /1 (description)
+
+# Il est possible que la présence d'une route diminue le nombre d'arbre à proximité (déboisement) et la probabilité de ponte (dérangement des individus par le trafic de voiture, mortalité par écrasement). Potentiellement la diminution des pontes peut aussi être dû à la diminution de la densité en arbres qui offre des habitats pour ces grenouilles arboricoles. On ne peut toufois pas conclure ici sur l'existence de liens de causalité car nos analyses sont seulement corrélatives.
+# /1 (0.5: hypothèses, 0.5: causalité)
+
+
+##### Exercice 6 #####
+
+for (i in unique(Suivi_Rainette$Type_Route)) {
+  print(
+    tapply(Suivi_Rainette[Suivi_Rainette$Type_Route == i,]$Nbre_arbre_rayon, Suivi_Rainette[Suivi_Rainette$Type_Route == i,]$Ponte, summary))
+} # /2 (0.5 syntaxe boucle, 0.5: tapply, 0.25: unique, 0.5: variable et fonction, 0.25: sélection)
+
+# On observe que les étendues des distributions en absence ou présence de ponte se recouvrent pour chaque type de route. Il ne semble donc pas avoir de différences marquées du nombre d'arbre en présence ou absence de ponte lorsqu'on tient compte des différents type de routes un à un.
+# /0.5 (interprétation)
+
+
+##### Exercice 7 #####
+
+?replicate #\0.5
+# cette fonction permet de répéter n fois des opérations/commandes données
+
+
+##### Exercice 8 #####
+
+# Explication des lignes de commandes fournies: (/2)
+
+# Ligne 1: création d'une nouvelle colonne contenant uniquement des valeurs manquantes ("NA") (/0.25)
+# Ligne 2: boucle parcourant chaque valeur unique du type de route (/0.5)
+# Ligne 4 à 6: dans la variable nouvellement créée, pour les lignes (individus) correspondantes au type de route "i" (/0.25), on réplique (/0.25) le collage des valeurs (arrondies à 2 chiffres après la virgule, /0.25) de nombre d'arbre moyens et de distance moyennes à la mare pour le type de route "i" (/0.25), le nombre de réplicat correspond au nombre d'individus capturés à proximité du type de route "i" (/0.25)
+
+# Ces commandes permettent de créer une nouvelle colonne contenant l'indication du nombre d'arbre moyen et de la distance moyenne à la mare par catégorie de type de route (valeur répétée pour chaque individu capturé à proximité de ce type de route) 
+# \0.5
+
+
+#########################################################       Important         ###############################################################
+# Les corrections proposées ici ne sont pas les seules solutions possibles, la notation finale prendra en compte toutes les solutions possibles # 
+#################################################################################################################################################
+
+
+```
+
+
+
+
+
+
+
+## Sujet Merlu S1:
+
+
+1) Donner les dimensions du jeu de données et les différents type de variable présentes dans le jeu de données.
+2) Décrire statistiquement et graphiquement le poids de pêche. Comparer les valeurs statistiques obtenues avec des mesures analogues appliquées après transformation logarithmique des données. Quelle échelle vous parait la plus adaptée ?
+3) Trouvez le mode des engins de pêches utilisés. Triez les effectifs de cette variable catégorielle et faire une fréquence cumulée sur cette série triée.
+4) Créer une fonction permettant de calculer l'étendue et une fonction permettant de calculer l'écart inter-quartile (sans utiliser directement les fonctions de base sous R). En faire une application sur les dimensions d'engin pour chaque catégories d'engins de pêche, et interprétez en une phrase le résultat obtenu.
+5) Créer une nouvelle colonne dans le jeu de données contenant uniquement l'identifiant du pays où la pêche a été faite.
+6) Donnez la variance des poids de pêche entre les différents engins de pêche, uniquement pour la france et l'espagne et pour une dimension d'engin de pêche supérieure à 100m. Mettez en avant via un test logique un exemple de différence de variance mis en évidence.
+7) A partir de l'aide disponible sous R expliquer à quoi servent les fonctions ncol et nrow. Faire un exemple d'application adapté.
+8) Comparez les tables d'effectifs des engins de pêche en présence ou absence de capture accidentelle, que pouvez-vous en conclure ?
+Comparez également au moins un paramètre de position de la distribution des longueurs d'engins de pêche respectivement pour un nombre de dauphins capturés strictement inférieur à 5 ou strictement supérieur à 4. Que pouvez vous en conclure ?
+9) Expliquez ce que réalise la ligne suivante:
+New_Suivi = data.frame(Engin_Zone = paste(Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Engin_peche, Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Zone) , Poids_peche = Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Poids_peche)
+10) Les lignes de codes suivantes contiennent des erreurs (6), identifiez les et corrigez les:
+mean(Suivi_Merlu[Longueur_engin < median(Suivi_Merlu$Longueur_engin)]$Poids_Peche)
+mean(Suivi_merlu[Longueur_engin > median(Suivi_Merlu$Longueur_engin), Poids_Peche]
+Que permet de visualiser cette commande ?
+
+
+
+```{r corrections sujet merlu}
+
+#### Examen: suivi de pêche au merlu ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Merlu = read.csv("Suivi_Merlu.csv")
+
+
+##### Exercice 1 #####
+
+str(Suivi_Merlu)
+# Ce jeu de données contient 100 lignes (ou évènements de pêche) et 6 colonnes (ou variables décrivant chaque évènement), 3 variables sont "numeric" (nombres réels), deux sont catégorielles (i.e chaine de caractères, "character") et une est un booléen ("logical").
+
+
+##### Exercice 2 #####
+
+# Description statistique de la distribution des poids de merlus pêchés:
+summary(Suivi_Merlu$Poids_peche)
+sd(Suivi_Merlu$Poids_peche)
+
+# Description graphique de la distribution des poids de merlus pêchés:
+hist(Suivi_Merlu$Poids_peche,
+     xlab = "Poids de merlus pêchés (en kg)",
+     ylab = "Nombre d'évènements de pêche",
+     main = "Nombre d'évènements de pêche par classe de poids des prises")
+boxplot(Suivi_Merlu$Poids_peche,
+     ylab = "Poids de merlus pêchés (en kg)",
+     main = "Distribution du poids de merlu pêché")
+
+# Métriques statistiques après tranformation logarithmique:
+summary(log(Suivi_Merlu$Poids_peche))
+sd(log(Suivi_Merlu$Poids_peche))
+# La transformation logarithmique permet d'avoir une échelle plus linéaire et de mieux représenter les valeurs les plus extrêmes, elle apparaît donc assez adapté ici.
+
+
+##### Exercice 3 #####
+
+table(Suivi_Merlu$Engin_peche)
+# La valeur modale de la distribution des engins de pêche est la catégorie "Palangres" (effectif le plus élevé).
+
+cumsum(sort(table(Suivi_Merlu$Engin_peche)) / length(Suivi_Merlu$Engin_peche))
+# Fréquence cumulée des engins de pêche dont les effectifs sont triés de manière croissante
+
+
+##### Exercice 4 #####
+
+Etendue <- function(x) {
+  max(x) - min(x)
+} # Calcule l'étendue d'une série statistique numérique
+
+Interquartile <- function(x){
+  quantile(x, 0.75) - quantile(x, 0.25)
+} # Calcule l'écart interquartile d'une série statistique numérique
+
+Etendue(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin)
+Interquartile(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin)
+Etendue(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin)
+Interquartile(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin)
+Etendue(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin)
+Interquartile(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin)
+# Les chaluts ont une étendue et un écart inter-quartile de longueur d'engin moindre que les deux autres engins de pêches
+
+
+##### Exercice 5 #####
+
+Suivi_Merlu$Pays = substr(Suivi_Merlu$Zone, 5, 6)
+# Création d'une nouvel variable contenant uniquement l'identifiant du pays 
+
+
+##### Exercice 6 #####
+
+var(Suivi_Merlu$Poids_peche[Suivi_Merlu$Pays %in% c("Fr", "Sp") & Suivi_Merlu$Longueur_engin > 100 & Suivi_Merlu$Engin_peche=="Chaluts"])
+var(Suivi_Merlu$Poids_peche[Suivi_Merlu$Pays %in% c("Fr", "Sp") & Suivi_Merlu$Longueur_engin > 100 & Suivi_Merlu$Engin_peche=="Palangres"])
+var(Suivi_Merlu$Poids_peche[Suivi_Merlu$Pays %in% c("Fr", "Sp") & Suivi_Merlu$Longueur_engin > 100 & Suivi_Merlu$Engin_peche=="Filets maillants"])
+
+var(Suivi_Merlu$Poids_peche[Suivi_Merlu$Pays %in% c("Fr", "Sp") & Suivi_Merlu$Longueur_engin > 100 & Suivi_Merlu$Engin_peche=="Chaluts"]) < var(Suivi_Merlu$Poids_peche[Suivi_Merlu$Pays %in% c("Fr", "Sp") & Suivi_Merlu$Longueur_engin > 100 & Suivi_Merlu$Engin_peche=="Palangres"])
+# La variance des poids de pêches réalisés avec chaluts est inférieure à celle des poids de pêche réalisés avec palangres 
+
+
+##### Exercice 7 #####
+
+?nrow
+?ncol
+# ces fonctions permettent de compter les nombres de colonnes ou de lignes dans un jeu de données
+
+
+##### Exercice 8 #####
+
+table(Suivi_Merlu[Suivi_Merlu$Bycatch==T,]$Engin_peche)
+table(Suivi_Merlu[Suivi_Merlu$Bycatch==F,]$Engin_peche)
+# Très peu de capture accidentelle ont lieu à la palangre, environ un tiers des captures au chaluts sont associées à une capture accidentelle et plus de la moitié des évènements avec captures pour les filets maillant. Les filets maillants et les chaluts sont les engins les plus à risque de capture.
+
+
+mean(Suivi_Merlu[Suivi_Merlu$Nombre < 5 & !is.na(Suivi_Merlu$Nombre),]$Longueur_engin)
+mean(Suivi_Merlu[Suivi_Merlu$Nombre > 4 & !is.na(Suivi_Merlu$Nombre),]$Longueur_engin)
+# Les tailles d'engins sont très élevés en moyenne lorsqu'on considère un grand nombre de dauphins capturés, l'augmentation de la taille impacte donc probablement le nombre de dauphin capturés (à la hausse).
+
+
+##### Exercice 9 #####
+
+New_Suivi = data.frame(Engin_Zone = paste(Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Engin_peche, Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Zone) , Poids_peche = Suivi_Merlu[grepl("Filets", Suivi_Merlu$Engin_peche),]$Poids_peche)
+# Cette ligne permet de créer un nouveau jeu de donnée (fonction data.frame), contenant le poids de pêche et un identifiant combinant (fonction paste) zone géographique et engin utilisé, ceka uniquement pour les événements de pêche au filet (sélectionnés à l'aide du mot clé "Filets" via la fonction grepl)
+
+
+##### Exercice 10 #####
+
+mean(Suivi_Merlu[Suivi_Merlu$Longueur_engin < median(Suivi_Merlu$Longueur_engin),]$Poids_peche)
+mean(Suivi_Merlu[Suivi_Merlu$Longueur_engin > median(Suivi_Merlu$Longueur_engin), "Poids_peche"])
+     # Les poids pêchés sont plus élevés lorsqu'on utilise des engins plus longs.
+
+```
+
+
+
+
+
+## Sujet Merlu S2:
+
+
+1) Créer une nouvelle variable regroupant les zones économiques (ZEE) du nord de l'Europe ("ZEE_Ir" et "ZEE_Gb") et celles du sud de l'Europe ("ZEE_Fr" et "ZEE_Sp").
+2) Donner le nombre d'événements de pêche avec ou sans capture par classe d'engin de pêche, respectivement pour les zones au nord de l'Europe et celles au sud de l'Europe. Faire une représentation graphique de l'impact du type d'engin de pêche sur le nombre d'événements avec ou sans capture accidentelle, pour chaque zone géographique (nord de l'Europe / sud de l'Europe). Que pouvez-vous en conclure ?
+3) En utilisant une boucle estimez si, pour chaque engin de pêche, la distribution des longueurs d'engins suit une loi normale.
+4) A l'aide d'une fonction de la famille "apply" comparez les moyennes des tailles d'engin en fonction des engins de pêche. Faites un graphique permettant de représenter les différences observées. Les tailles d'engin diffèrent-elles statistiquement entre engins de pêche ? 
+5) Représentez graphiquement l'évolution du nombre de dauphins capturés en fonction du poids de pêche. Faire une desciption statistique de cette relation. Que pouvez-vous en dire ?
+6) Modélisez l'évolution du nombre de dauphin capturés en fonction du poids de pêche. Illustrez graphiquement le modèle et interprétez les sorties de ce modèle.
+7) Décrivez graphiquement et statistiquement l'évolution du poids de pêche en fonction de la longueur de l'engin de pêche.
+8) Tentez de modéliser l'évolution du poids de pêche en fonction de la longueur de l'engin de pêche à l'aide d'une régression linéaire. Que pouvez-vous en dire ?
+9) Faites de même après une transformation cubique des données. Que pouvez vous en dire ?
+10) Faites de même (en conservant la transformation cubique), en retirant les événements de pêche associés à des engins de pêche dont la longueur dépasse les 3800 mètres.
+11) Créer une fonction dans R permettant de centrer-réduire une variable.
+12) Comparez les résultats du dernier modèle effectué avec celui modélisant l'évolution du nombre de dauphins capturés en fonction du poids de pêche (adaptez les modèles si nécessaire). Que pouvez-vous dire sur les possibles mécanismes de causalité existant ?
+13) Les lignes de code suivantes comportent 6 erreurs, corrigez les et expliquez ce que réalisent ces lignes. 
+
+for (i in unique(Suivi_Merlu$Engin_peche)) {
+  for ("j" in unique(Suivi_Merlu$Zone)) {
+    if (i == "Chaluts") {}
+      print(
+      elseif(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j]$Longueur_engin) < 100,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    }
+    else if (i = "Palangres") {
+      print(
+      elseif(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j]$Longueur_engin) < 1500,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    } 
+    else (i == "Filets maillants") {
+      print(
+      elseif(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j]$Longueur_engin) < 2000,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    }
+  }
+}
+14) Expliquez ce que réalisent les fonction "any()" et "is.na()".
+15) En utilisant une fonction de la famille "apply", déterminez pour chaque colonne du jeu de données si des valeurs manquantes sont présentes ou non dans la colonne.
+16) En utilisant une fonction de la famille "apply" sur la colonne présentant des valeurs manquantes, produire un vecteur logique indiquant la présence ou non de valeur manquante pour chaque individu.
+
+
+
+
+```{r corrections sujet merlu}
+
+#### Examen: suivi de pêche au merlu ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Merlu = read.csv("Suivi_Merlu.csv")
+
+
+##### Exercice 1 #####
+
+# Création de la nouvelle variable regroupant les zones au nord et au sud de l'Europe:
+
+Suivi_Merlu$Zone_simp = "Sud_Europe"
+Suivi_Merlu[Suivi_Merlu$Zone %in% c("ZEE_Gb", "ZEE_Ir"),]$Zone_simp = "Nord_Europe"
+
+#Alternative:
+
+Zone_simp = c()
+for (i in Suivi_Merlu$Zone) {
+  if (i %in% c("ZEE_Gb", "ZEE_Ir")) {
+    Zone_simp = c(Zone_simp, "Nord_Europe")
+  }
+  else {
+    Zone_simp = c(Zone_simp, "Sud_Europe")
+  }
+}
+
+
+##### Exercice 2 #####
+
+table(Suivi_Merlu[Suivi_Merlu$Zone_simp=="Nord_Europe",]$Bycatch, Suivi_Merlu[Suivi_Merlu$Zone_simp=="Nord_Europe",]$Engin_peche)
+table(Suivi_Merlu[Suivi_Merlu$Zone_simp=="Sud_Europe",]$Bycatch, Suivi_Merlu[Suivi_Merlu$Zone_simp=="Sud_Europe",]$Engin_peche)
+
+barplot(table(Suivi_Merlu[Suivi_Merlu$Zone_simp=="Nord_Europe",]$Bycatch, Suivi_Merlu[Suivi_Merlu$Zone_simp=="Nord_Europe",]$Engin_peche),
+        legend.text = c("Absence de capture", "Capture"), # légende des couleurs de barres
+        args.legend = list(title = "Capture accidentelle ?"), # titre des légendes de couleurs
+        main = "Répartition du nombre d'événement par type d'engin et présence/absence de capture",
+        xlab = "Type d'engin",
+        ylab = "Nombre d'événement",
+        horiz  = T,
+        beside = T)
+
+
+barplot(table(Suivi_Merlu[Suivi_Merlu$Zone_simp=="Sud_Europe",]$Bycatch, Suivi_Merlu[Suivi_Merlu$Zone_simp=="Sud_Europe",]$Engin_peche),
+        legend.text = c("Absence de capture", "Capture"), # légende des couleurs de barres
+        args.legend = list(title = "Capture accidentelle ?"), # titre des légendes de couleurs
+        main = "Répartition du nombre d'événement par type d'engin et présence/absence de capture",
+        xlab = "Type d'engin",
+        ylab = "Nombre d'événement",
+        horiz  = T,
+        beside = T)
+
+# les captures accidentelles ont majoritairement lieu dans les filets maillants puis les chaluts. Les captures sont très rare dans les palangres.
+# Il n'y a pas de différences marquées de répartition des captures entre l'Europe du nord et l'Europe du sud.
+
+
+##### Exercice 3 #####
+
+
+for (i in unique(Suivi_Merlu$Engin_peche)) {
+    qqnorm(Suivi_Merlu[Suivi_Merlu$Engin_peche==i,]$Longueur_engin)
+    qqline(Suivi_Merlu[Suivi_Merlu$Engin_peche==i,]$Longueur_engin)
+}
+
+# Alternative:
+
+
+for (i in unique(Suivi_Merlu$Engin_peche)) {
+    hist(Suivi_Merlu[Suivi_Merlu$Engin_peche==i,]$Longueur_engin, probability = T)
+    curve(dnorm(x, mean(Suivi_Merlu[Suivi_Merlu$Engin_peche==i,]$Longueur_engin), sd(Suivi_Merlu[Suivi_Merlu$Engin_peche==i,]$Longueur_engin)), add=T, col = "red")
+}
+
+# Les distributions des tailles d'engins de pêche semblent suivre des lois normales. Les tailles de palangres semblent toutefois dévier d'une loi normale sur les plus fortes valeurs.
+
+
+##### Exercice 4 #####
+
+
+tapply(Suivi_Merlu$Longueur_engin, Suivi_Merlu$Engin_peche, mean)
+# la taille des filets est en moyenne bien plus petite que celle des palangres et des filets maillants
+
+boxplot(Suivi_Merlu$Longueur_engin ~ Suivi_Merlu$Engin_peche,
+        xlab = "Type d'engin de pêche",
+        ylab = "Taille des engins (m)",
+        main = "Variation de la taille des engins")
+
+
+
+# intervalles de confiance des longueurs d'engins par type d'engin:
+
+c(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin) - 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin), mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin) + 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Chaluts",]$Longueur_engin))
+
+c(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin) - 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin), mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin) + 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Palangres",]$Longueur_engin))
+
+c(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin) - 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin), mean(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin) + 1.96 * sd(Suivi_Merlu[Suivi_Merlu$Engin_peche=="Filets maillants",]$Longueur_engin))
+
+# En comparant les intervalles de confiance de chaque distribution, on observe une absence de recouvrement uniquement entre les chaluts et les filets maillants. On peut donc uniquement conclure que la taille des engins est statistiquement distincte entre ces deux types d'engin.
+
+
+
+
+
+##### Exercice 5 #####
+
+plot(Suivi_Merlu$Nombre ~ Suivi_Merlu$Poids_peche,
+     main = "Nombre de capture accidentelle en fonction du poids de pêche",
+     xlab = "Poids de pêche (kg)",
+     ylab = "Nombre de capture accidentelle")
+# la relation est plutôt linéaire, on utilisera donc une corrélation de Pearson pour la décrire
+
+cor(Suivi_Merlu[!is.na(Suivi_Merlu$Nombre),]$Nombre, Suivi_Merlu[!is.na(Suivi_Merlu$Nombre),]$Poids_peche)
+# on observe une forte corrélation positive (courbe croissante, valeur du coefficient de corrélation positive et proche de 1)
+
+
+
+
+##### Exercice 6 #####
+
+
+reg_capt_poids = lm(Suivi_Merlu$Nombre ~ Suivi_Merlu$Poids_peche)
+# régression linéaire entre le nombre de capture accidentelle et le poids de pêche
+
+plot(reg_capt_poids)
+# la régression semble valide, il y a toutefois un biais de linéarité des résidus assez visible sur le premier graphique, notamment pour un nombre élevé de capture accidentelle. Ce point pourrait potentiellement être problématique. 
+
+# illustration graphique de la régression:
+
+plot(Suivi_Merlu$Nombre ~ Suivi_Merlu$Poids_peche,
+     main = "Nombre de capture accidentelle en fonction du poids de pêche
+     (avec la régression linéaire associée, en rouge)",
+     xlab = "Poids de pêche (kg)",
+     ylab = "Nombre de capture accidentelle")
+
+abline(reg_capt_poids, col = "red")
+
+
+
+coefficients(reg_capt_poids)
+# d'après notre modèle, le nombre de dauphin capturés augmente de 4.4 par tonnes de poisson capturés (conversion du coefficient directeur des kilos vers les tonnes)
+
+summary(reg_capt_poids)$r.squared
+# plus de 90% de la variation de la variable réponse est expliquée par la régression (très bonne adéquation du modèle aux données) 
+
+
+
+
+
+##### Exercice 7 #####
+
+
+plot(Suivi_Merlu$Poids_peche ~ Suivi_Merlu$Longueur_engin,
+     main = "Poids de pêche en fonction de la longueur de l'engin de pêche",
+     xlab = "Longueur de l'engin de pêche (m)",
+     ylab = "Poids de pêche (kg)")
+
+# la relation n'est pas linéaire mais semble bien monotone (croissante), on utilisera donc une corrélation de Spearman pour la décrire
+
+cor(Suivi_Merlu[!is.na(Suivi_Merlu$Nombre),]$Poids_peche, Suivi_Merlu[!is.na(Suivi_Merlu$Nombre),]$Longueur_engin, method = "spearman")
+# on observe une corrélation positive (valeur du coefficient de corrélation positive) de Spearman parfaite (valeur du coefficient égale à 1: le classement en rang est identique pour les deux variables)
+
+
+
+
+##### Exercice 8 #####
+
+reg_poids_long = lm(Suivi_Merlu$Poids_peche ~ Suivi_Merlu$Longueur_engin)
+# régression linéaire entre le poids de pêche et la longueur des engins
+
+plot(reg_poids_long)
+# les hypothèses de linéarité et d'homoscedasticité des résidus ne sont pas respectées (premier et troisième graphiques), la régression linéaire n'est donc pas un modèle adapté ici (en effet la relation entre les variables n'est pas linéaire). Il pourrait être utile d'envisager une transformation de la variable réponse pour retrouver une relation linéaire.
+  
+  
+  
+
+
+##### Exercice 9 #####
+
+
+reg_poids_long_cube = lm(I(Suivi_Merlu$Poids_peche^3) ~ Suivi_Merlu$Longueur_engin)
+# régression linéaire entre le poids de pêche au cube et la longueur des engins
+
+plot(reg_poids_long_cube)
+# les hypothèses de linéarité et d'homoscedasticité des résidus semblent respectées après transformation cubique de la variable réponse mais on observe désormais trois points d'influence particulièrement importants (quatrième graphique) qui sont potentiellement des outliers (dans un cas réel cela serait à vérifier, s'il s'agit effectivement de valeurs aberrantes on peut légitimement les retirer, sinon on doit les garder dans le modèle).
+
+
+
+
+##### Exercice 10 #####
+
+
+reg_poids_long_cube_wo_outlier = lm(I(Poids_peche^3) ~ Longueur_engin, data = Suivi_Merlu[Suivi_Merlu$Longueur_engin < 3800,])
+# régression linéaire entre le poids de pêche au cube et la longueur des engins, sans les trois points potentiellement aberrants.
+
+plot(reg_poids_long_cube_wo_outlier)
+# les hypothèses requises pour l'utilisation d'un modèle linéaire semblent désormais respectées même si l'hypothèse de linéarité et d'homoscedasticité des résidus reste toujours discutable (déviations visibles sur les premier et troisième graphiques).
+
+
+
+
+##### Exercice 11 #####
+
+
+centrer_reduire <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+# fonction permettante de centrer-réduire un vecteur de données quantitatives
+
+
+
+
+
+##### Exercice 12 #####
+
+
+# régressions linéaires après centrage et réduction des variables:
+
+reg_poids_long_cube_wo_outlier = lm(scale(I(Poids_peche^3)) ~ scale(Longueur_engin), data = Suivi_Merlu[Suivi_Merlu$Longueur_engin < 3800,])
+reg_capt_poids = lm(scale(Suivi_Merlu$Nombre) ~ scale(Suivi_Merlu$Poids_peche))
+
+
+
+summary(reg_poids_long_cube_wo_outlier)$r.squared
+summary(reg_capt_poids)$r.squared
+# Dans les deux cas l'adéquation aux données est très bonne avec plus de 90% de la variance expliquée par les modèles, le coefficient de détermination est légèrement plus élevé dans le cas du modèle sur la relation entre poids de pêche au cube et longueur d'engin.
+
+
+coefficients(reg_poids_long_cube_wo_outlier)
+coefficients(reg_capt_poids)
+# après avoir centré-réduit les variables les coefficients directeurs de nos deux régressions sont très similaires (environ 0.98), la taille d'effet associé aux deux modèles sont donc comparables. Toutefois, dans le cas du modèle sur la relation entre poids de pêche au cube et longueur d'engin une transormation cubique a été effectuée donc l'intensité de la relation avec la variable transformée est probablement moindre.
+
+
+
+# Les modèles que nous avons effectuées ici permettent uniquement d'estimer le niveau de corrélation entre les variables, ils n'indiquent en rien de potentielles relation de causalité. S'il y a causalité, son déterminisme est complexe puisque le nombre de capture accidentelle corrèle avec le poids de pêche, qui corrèle lui même avec la longueur des engins, elle même dépendante du type d'engin (exercice 4). La probabilité d'une capture accidentelle pourrait être liée aussi bien à l'effort de pêche, qu'à la taille des engins et/ou plus généralement à leur typologie. Les corrélations pourraient ainsi uniquement être dues à des effets d'entrainements  existant du fait de relations de causalité multiples (par exemple: le type d'engin utilisé induit des tailles différentes d'engins et des risques différents de captures, donc la taille des engins et le risque de capture sont corrélés).
+
+
+
+
+
+##### Exercice 13 #####
+
+# Version corrigée du code:
+
+for (i in unique(Suivi_Merlu$Engin_peche)) {
+  for (j in unique(Suivi_Merlu$Zone)) {
+    if (i == "Chaluts") {
+      print(
+      ifelse(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j,]$Longueur_engin) < 100,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    }
+    else if (i == "Palangres") {
+      print(
+      ifelse(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j,]$Longueur_engin) < 1500,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    } 
+    else {
+      print(
+      ifelse(mean(Suivi_Merlu[Suivi_Merlu$Engin_peche == i & Suivi_Merlu$Zone == j,]$Longueur_engin) < 2000,
+      paste("Dans la zone", j, "l'engin", i, "est généralement de petite taille", sep = " "),
+      paste("Dans la zone", j, "l'engin", i, "est généralement de grande taille", sep = " "))
+      )
+    }
+  }
+}
+
+# Les erreurs suivantes étaient présentes: le curseur de la seconde boucle avait des guillemets, il manquait un signe égal pour tester la deuxième condition, une accolade de fermeture surnuméraire apparaissait juste après la première condition, on avait ajouté une condition après le "else", il y avait une erreur sur le nom de la fonction ifelse (noté elseif), il manquait une virgule à la fin des crochets pour les sélections de lignes dans le jeu de données
+
+# Ce code permet de comparer pour chaque combinaison de catégorie d'engin et de zone d'activité la valeur moyenne de la longueur de l'engin à une valeur seuil définie par catégorie d'engin. Si la valeur moyenne est inférieure à la valeur seuil on imprime un message indiquant que la valeur moyenne est basse pour la combinaison de classe d'intérêt, si elle est supérieure on indique que la valeur est élevée. 
+
+
+
+##### Exercice 14 #####
+
+?is.na
+?any
+
+# La fonction "is.na()" permet de tester la présence de valeurs manquantes à chaque position d'un vecteur ou d'une liste
+# La fonction "any()" permet de tester si au moins un "TRUE" est présent dans un vecteur logique
+
+
+
+
+##### Exercice 15 #####
+
+
+apply(Suivi_Merlu, 2, function(x) any(is.na(x)))
+# Seule la colonne "Nombre" contient des valeurs manquantes
+
+
+
+
+##### Exercice 16 #####
+
+
+sapply(Suivi_Merlu$Nombre, is.na)
+# vecteur indiquant la présence de valeurs manquantes dans la colonne "Nombre"
+
+
+
+```
+
+
+
+
+
+
+
+## Sujet Libellule:
+
+
+1) Quelle sont les dimensions du jeu de données ? Pour chaque colonne donnez la nature de la variable associée. Affichez les premières lignes du jeu de données à l'aide d'une fonction R. (/2)
+2) Donnez la médiane, l'écart interquartile et l'écart-type de la taille des libellules. Réalisez un graphique permettant en particulier de visualiser la médiane et l'écart interquartile de la taille. (/2.5)
+3) L'envergure des libellules est-elle en moyenne plus grande que leur taille ? Justifiez votre conclusion par un test logique. (/1)
+4) Donner la fréquence des différentes espèces de libellule. Quelles sont les deux espèces les moins représentées ? Comparez la taille moyenne chez chacune de ces deux espèces à la taille moyenne générale.(/3)
+5) Faites une description statistique et graphique de la couleur des individus. A partir d'un exemple, montrez que la couleur des individus peut varier au sein d'une même espèce. (/2)
+6) Comparez la distribution des effectifs de qualités d'habitat (colonne "Etat_zone_humide") entre l'espèce a, l'espèce b et le reste des autres espèces. Que pouvez-vous en conclure ? (/2)
+7) On souhaite connaitre le niveau de biodiversité mis en évidence par cette campagne de capture. Donnez la richesse spécifique de cette campagne (c'est à dire le nombre d'espèces différentes capturés au cours de la campagne).
+On peut aussi calculer la diversité à partir d'autres métriques prenant compte du niveau de rareté de chaque espèce ? C'est par exemple le cas de l'indice de Shannon:
+$$Shannon = \sum_{i=1}^{n}p_{i}log(p_{i})$$
+Shannon: indice de diversité de Shannon
+n: nombre d'espèce (=richesse spécifique)
+p_{i}: fréquence pour chaque espèce i
+Créez une fonction permettant de calculer cet indice dans R et faites en une application. (/3)
+8) Expliquez ce que réalise la ligne ci-dessous: (/2)
+Suivi_Libellule$Morphe_espece = paste(Suivi_Libellule$Espece, substr(Suivi_Libellule$Couleur, 1, 2), sep = "_")
+
+
+
+```{r corrections sujet merlu}
+
+#### Examen: campagne de suivi de libellules ####
+
+setwd("~/ATER PAU 2024/Cours modifiés/OUMOBIOS/Exams")
+Suivi_Libellule = read.csv("Suivi_Libellule.csv")
+
+
+##### Exercice 1 #####
+
+str(Suivi_Libellule) # /0.5
+# Ce jeu de données contient 104 lignes (ou évènements de captures de libellules) et 6 colonnes (ou variables décrivant chaque capture), les deux premières colonnes sont "numeric" (nombres réels), puis les trois dernières sont catégorielles (i.e chaine de caractères, "character").
+# /1
+head(Suivi_Libellule) # /0.5
+
+
+##### Exercice 2 #####
+
+median(Suivi_Libellule$Taille) # /0.5
+IQR(Suivi_Libellule$Taille) # /0.5
+sd(Suivi_Libellule$Taille) # /0.5
+
+# Représentation graphique de la taille (boxplot):
+boxplot(Suivi_Libellule$Taille,
+        ylab = "Taille des libellules (en mm)",
+        main = "Distribution de la taille des libellules") # /1
+
+
+##### Exercice 3 #####
+
+mean(Suivi_Libellule$Envergure) > mean(Suivi_Libellule$Taille) # /1 (0.5 pour mean, 0.5 pour comparaison)
+# L'envergure des libellules est supérieure à leur taille 
+
+
+##### Exercice 4 #####
+
+table(Suivi_Libellule$Espece) / length(Suivi_Libellule$Espece) # /1
+#Les deux espèces les moins représentés sont les espèces a et b 
+# /0.5
+
+mean(Suivi_Libellule[Suivi_Libellule$Espece=="a",]$Taille) # /0.5 (mean)
+mean(Suivi_Libellule[Suivi_Libellule$Espece=="b",]$Taille) # /0.5 (sélection)
+mean(Suivi_Libellule$Taille)
+# les libellules les plus rares sont plus grandes que la moyenne des libellules
+# /0.5
+
+
+##### Exercice 5 #####
+
+table(Suivi_Libellule$Couleur) # /0.5
+# table des effectifs de couleurs
+
+# représentation graphique:
+barplot(table(Suivi_Libellule$Couleur),
+        xlab = "Couleurs des libellules",
+        ylab = "Nombre de libellules",
+        main = "Nombre de libellules par classe de couleur"
+)# /1
+
+table(Suivi_Libellule[Suivi_Libellule$Espece=="a", "Couleur"]) # /0.5
+# la couleur corporelle varie entre individus chez l'espèce a
+
+
+##### Exercice 6 #####
+
+table(Suivi_Libellule[Suivi_Libellule$Espece=="a",]$Etat_zone_humide) # /0.5 (table)
+table(Suivi_Libellule[Suivi_Libellule$Espece=="b",]$Etat_zone_humide)  # /0.5(selection)
+table(Suivi_Libellule[Suivi_Libellule$Espece %in% c("c", "d", "e"),]$Etat_zone_humide) # /0.5 (selection)
+# les libellules a et b ne se trouvent que dans des habitats de bonne qualité contrairement au reste des espèces
+# /0.5
+
+
+##### Exercice 7 #####
+
+length(unique(Suivi_Libellule$Espece)) # /0.5
+# La richesse spécifique est de 5 espèces
+
+shannon <- function(x) {
+  -sum((table(x)/length(x)) * log(table(x)/length(x)))
+} # /2 (1 pour syntaxe, 1 pour operation)
+
+shannon(Suivi_Libellule$Espece) # /0.5
+
+
+##### Exercice 8 #####
+
+Suivi_Libellule$Morphe_espece = paste(Suivi_Libellule$Espece, substr(Suivi_Libellule$Couleur, 1, 2), sep = "_")
+# cette ligne permet de créer une nouvelle colonne dans le jeu de données (/0.5) correspondant à la combinaison (/0.5) de l'identifiant de l'espèce avec la première lettre de la couleur corporelle (/0.5) de l'individu, séparé par un tiret du 8 ("_") (/0.5)
+
+
+```
+
+
+
 
 
