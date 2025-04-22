@@ -362,7 +362,7 @@ Il existe d'autres méthodes permettant de mesurer le degré d'association entre
   Et que le coefficient de corrélation de Spearman est usuellement défini par: 
   $$\text{Rho}(X, Y) = 1 - \frac{6\sum_{i=1}^{n}d_{i}^2}{n(n^2-1)}$$  
   Reproduisez par vous même les fonctions permettant de calculer ces trois métriques.  
-  * Calculez la corrélation entre la corpulence et le poids des mères à l'aide votre fonction et de la fonction disponible sur R. Qu'observez-vous ? Faites de même, mais en écartant les valeurs dupliquées de corpulence et de poids: que pouvez vous en conclure ?
+  * Calculez la corrélation entre la taille et le poids des mères à l'aide votre fonction et de la fonction disponible sur R. Qu'observez-vous ? Faites de même, mais en écartant les valeurs dupliquées de corpulence et de poids: que pouvez vous en conclure ?
   * Modifiez votre fonction de covariance pour qu'elle renvoie un message d'erreur si les deux vecteurs en entrée ne font pas la même taille.
 ::::
 
@@ -411,11 +411,11 @@ cor(data_lezard$SVL_MOTHERS, data_lezard$M_MOTHERS, method = "spearman") # corr�
 
 # conversion de la taille des mères en centimètres:
 
-data_lezard$SVL_MOTHERS_cm = data_lezard$SVL_MOTHERS * 10
+data_lezard$SVL_MOTHERS_cm = data_lezard$SVL_MOTHERS / 10
 
 cov(data_lezard$SVL_MOTHERS_cm, data_lezard$M_MOTHERS)
 cor(data_lezard$SVL_MOTHERS_cm, data_lezard$M_MOTHERS, method = "spearman")
-# la covariance a décuplé tandis que le coefficient de corrélation a gardé la même valeur:
+# la covariance a dimuné d'un facteur 10 tandis que le coefficient de corrélation a gardé la même valeur:
 # seule la covariance est sensible à l'unité des variables (métrique dimensionnelle)
 
 
@@ -523,7 +523,7 @@ En général on privilégiera l'utilisation de la corrélation sur la covariance
 
 La distribution d'une variable continue, prenant des valeurs finies, peut très souvent être approchée par une **loi de distribution normale** (aussi appelée gaussienne) ayant pour paramètre la moyenne et l'écart-type de la variable. On peut simuler dans R une loi normale de paramètres choisis, à l'aide de la fonction **rnorm**. L'adéquation des données à cette loi de distribution théorique peut être vérifiée graphiquement, à l'aide des fonctions suivantes:  
 
-  - **hist()** pour tracer l'histogramme des données observées / **lines(density())** pour tracer la courbe de densité des données ou de la loi normale simulée (sans ce dernier cas, on peut aussi utiliser: "curve(dnorm(x, "paramètres de la loi normale"))")
+  - **hist()** pour tracer l'histogramme des données observées / **lines(density())** pour tracer la courbe de densité des données ou de la loi normale simulée (dans ce dernier cas, on favorisera le tracé de la densité théorique: **"curve(dnorm(x, "paramètres de la loi normale"))"**)
   - **qqnorm()** pour tracer les quantiles de la distribution observées en fonction des quantiles de la distribution théorique (normale) / **qqline()** pour tracer la ligne que devrait suivre le graphique précédent si la distribution observée suivait parfaitement la distribution théorique
 
 Lorsqu'une variable suit une loi normale, on peut alors en déduire son intervalle de confiance. **L'intervalle de confiance à 95%** d'une variable est défini par: $$[mean(X) - 1.96 sd(X); mean(X) + 1.96 sd(X)]$$ Cela signifie que 95% des individus se situent dans cet intervalle. On utilise souvent les intervalles de confiance à 95% pour **déterminer si un ensemble de valeurs diffère d'un autre**, de même nature: on considère que c'est le cas si les deux intervalles de confiance sont **disjoints** (sans chevauchement).
@@ -533,7 +533,9 @@ Les relations entre deux variables quantitatives continues peuvent être décrit
   - la **covariance** (fonction **"cov()"**), qui renseigne sur le niveau (et le sens: décroissant si négatif/ croissant si positif) de covariation des variables
   - la **corrélation** (fonction **"cor()"**), qui renseigne sur le degré (et le sens: décroissant si négatif/ croissant si positif) d'association entre variables, c'est-à-dire la prépondérance de la relation entre variable sur les variations internes des variables
   - on utilise préférentiellement la **corrélation de Pearson** (fonction **"cor()"**) quand la relation est de type **linéaire**
-  - on utilise préférentiellement la **corrélation de Spearman** (fonction **"cor(method = "spearman")"**) quand la relation est **non linéaire mais monotone** (la formule donnée en cours ne s'applique que si la relation est strictement monotone)
+  - on utilise préférentiellement la **corrélation de Spearman** (fonction **"cor(method = "spearman")"**) quand la relation est **non linéaire mais monotone** (la formule donnée en cours ne s'applique que si la relation est strictement monotone)  
+  
+Il est primordial de se rappeler que **le niveau de corrélation ne donne aucune certitude sur les relations de cause à effet**, seulement de potentielles indications qui'il conviendra de tester expérimentalement si on veut s'en assurer.  
   
 Il faut bien penser à étudier graphiquement le type de relation entre les deux variables avant d'utiliser les métriques de corrélation, afin de sélectionner celle la plus adaptée à notre cas. Il peut parfois être utile de **centrer-réduire** les variables pour **s'affranchir de la dimensionnalité** (sensibilité aux unités) en utilisant la fonction **"scale()"** dans R.  
 

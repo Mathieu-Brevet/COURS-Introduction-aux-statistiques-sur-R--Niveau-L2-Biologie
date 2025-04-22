@@ -45,7 +45,7 @@ data_lezard = read.table("Suivi_lezard_vivipare.csv", header = T, sep = "\t", de
 # Régression linéaire par la méthode des moindres carrés
 
 
-La **régression linéaire** permet de modéliser une variable quantitative continue par une **relation affine** avec une autre variable (de la forme Y = aX + b, avec Y la **variable réponse** et X la **variable explicative**). Il faut donc vérifier en amont que la relation entre variable semble bien linéaire. Les paramètres de la régression linéaire (coefficient directeur "a" et ordonnée à l'origine "b") sont déterminés à l'aide de la méthode des moindres carrés: on cherche à minimiser la somme des carrés des écarts entre les points observés et la droite de régression (voir cours OUMOBIO pour détails), c'est à dire le carré des **résidus** de la régression.  
+La **régression linéaire** permet de modéliser une variable quantitative continue par une **relation affine** avec une autre variable (de la forme Y = aX + b, avec Y la **variable réponse** et X la **variable explicative**). Il faut donc vérifier en amont que la relation entre variables semble bien linéaire. Les paramètres de la régression linéaire (coefficient directeur "a" et ordonnée à l'origine "b") sont déterminés à l'aide de la méthode des moindres carrés: on cherche à minimiser la somme des carrés des écarts entre les points observés et la droite de régression (voir cours OUMOBIO pour détails), c'est à dire le carré des **résidus** de la régression.  
 Dans R l'estimation des paramètres de régression et les métriques statistiques associées peuvent être obtenues avec la fonction **lm(Var1 ~ Var2)**, voici quelques exemples d'applications:
 
 
@@ -69,11 +69,11 @@ reg_poids_juv_meres = lm(M_IND ~ M_MOTHERS, data = data_lezard) # alternative
  
   reg_poids_juv_meres$fitted.values
   fitted.values(reg_poids_juv_meres)
- # valeurs des poids des juvéniles (variable réponse) estimés à partir de l'équation de régression pour chaque valeurs observés de poids des mères (variable explicative) => valeurs prédites
+ # valeurs des poids des juvéniles (variable réponse) estimées à partir de l'équation de régression pour chaque valeur observée de poids des mères (variable explicative) => valeurs prédites
   
  
  predict(reg_poids_juv_meres, newdata = data.frame(M_MOTHERS = seq(2, 5, 0.1)))
- # valeurs prédites de la variable réponse, en fonction d'un ensemble de valeur donnée pour la variable explicative
+ # valeurs prédites de la variable réponse, en fonction d'un ensemble de valeurs données pour la variable explicative
  
  
  
@@ -119,8 +119,8 @@ SumEc <- function(Y, Ypred){
 Valpos <- seq(-0.5, 0.5, 0.001) 
 
 #On déclare nos variables 
-#(pour l'instant non attribuées (NA), qui vont ?tre
-#rempli plus tard)
+#(pour l'instant non attribuées (NA), qui vont être
+#remplies plus tard)
 
 Va <- NA #Valeur de a
 Vb <- NA #Valeur de b
@@ -145,7 +145,7 @@ for (i in 1:100000){
 mat <- cbind(Va, Vb, Vec)
 
 
-#Quelle résultat parmi les 100 000 générés
+#Quel résultat parmi les 100 000 générés
 #à le Vec le plus faible ?
 
 which.min(Vec)
@@ -159,7 +159,7 @@ mat[which.min(Vec), c(1, 2)]#Affichage de la ligne
 
 a <- cov(data_lezard$M_IND, data_lezard$M_MOTHERS)/var(data_lezard$M_MOTHERS)
 b <- mean(data_lezard$M_IND)-a*mean(data_lezard$M_MOTHERS)
- # assez proche des estimations empirique et identique aux sorties de "lm()"
+ # assez proche des estimations empiriques et identiques aux sorties de "lm()"
 
 ```
 
@@ -214,7 +214,7 @@ reg_poids_taille_juv = lm(M_IND ~ SVL_IND, data = data_lezard)
 
 **POUR ALLER PLUS LOIN**  
 \newline
-Il est possible de normaliser la variable réponse en fonction d'une autre variable dans la fonction "lm()". Il suffit d'indiquer la variable permettant la mise à l'échelle en utilisant l'argument "offset". Par exemple, "lm(data_lezard$SVL_IND ~ data_lezard$M_IND, offset = data_lezard$M_IND)" est équivalent à "lm(data_lezard$Corp_IND ~ data_lezard$M_IND)", puisqu'on normalise la taille par le poids dans les deux cas. Cet option est notamment très utile lorsque la variable réponse est associée à différent contexte donnat un poids plus ou moins important aux mesures (par exemple différents temps d'échantillonnage, d'exposition...).
+Il est possible de normaliser la variable réponse en fonction d'une autre variable dans la fonction "lm()". Il suffit d'indiquer la variable permettant la mise à l'échelle en utilisant l'argument "offset". Par exemple, "lm(data_lezard\$SVL_IND ~ data_lezard\$M_IND, offset = data_lezard\$M_IND)" est équivalent à "lm(data_lezard\$Corp_IND ~ data_lezard\$M_IND)", puisqu'on normalise la taille par le poids dans les deux cas. Cette option est notamment très utile lorsque la variable réponse est associée à différents contextes donnant un poids plus ou moins important aux mesures (par exemple différents temps d'échantillonnage, d'exposition...).
 ::::
 
 
@@ -224,7 +224,7 @@ Il est possible de normaliser la variable réponse en fonction d'une autre varia
 
 
 Lorsqu'on produit un modèle dans R, il convient toujours de vérifier si le modèle est bien en adéquation avec les données, et donc de vérifier si le modèle produit respecte bien les **prérequis d'une régression linéaire**: en particulier les termes d'erreurs (**résidus**) doivent conserver une **variance constante** (homoscedasticité) et ne doivent **pas varier** en fonction de la variable réponse (marqueur d'une relation non linéaire). On peut aussi vérifier que la distribution des résidus est **normale** (cette hypothèse n'est pas indispensable pour une régression linéaire univariée mais assure une bonne qualité de modèle toutefois) et identifier la présence de **points d'influence** forts, qui pourraient fausser les résultats de la régression (comme par exemple avec d'éventuelles mesures aberrantes).  
-Le meilleur moyen de vérifier les deux premières hypothèses est d'utiliser un graphique représentant les résidus en fonction des valeurs prédites. Pour vérifier la normalité des résidus on peut utiliser un diagramme quantile-quantile. Pour identifier les points d'influence on utilise un graphique représentant les résidus en fonction des effet de leviers.
+Le meilleur moyen de vérifier les deux premières hypothèses est d'utiliser un graphique représentant les résidus en fonction des valeurs prédites. Pour vérifier la normalité des résidus on peut utiliser un diagramme quantile-quantile. Pour identifier les points d'influence on utilise un graphique représentant les résidus en fonction des effets de levier.
 
 
 ```{r validité régression}
@@ -237,7 +237,7 @@ plot(residuals(reg_poids_juv_meres) ~
      )
 plot(reg_poids_juv_meres, 1)
 # alternative: la ligne rouge indique l'évolution moyenne des résidus en fonction des valeurs prédites
-# on vérifie grâce à ce graphique l'homoscedasticité et la linéarité des résidus: les résidus doivent être distribués de manière homogène de part et d'autre de 0, selon un nuage de point homogène (ligne rouge horizontale en 0 sur lme second graphe)
+# on vérifie grâce à ce graphique l'homoscedasticité et la linéarité des résidus: les résidus doivent être distribués de manière homogène de part et d'autre de 0, selon un nuage de point homogène (ligne rouge horizontale en 0 sur le second graphe)
 
 
  #pas de problème de non linéarité ou de variabilité changeante des résidus ici
@@ -254,14 +254,14 @@ qqline(resid(reg_poids_juv_meres))
 
  
  plot(reg_poids_juv_meres, 5)
- # on vérifie ici la présence ou non de point d'influence, la ligne rouge doit rester horizontale (sinon: présence de fort point d'influence), les fort point d'influence apparaissent au-delà d'une distance de Cook de 0.8 (cette limite apparait sur le graphique par une ligne pointillée lorsqu'elle est franchise)
+ # on vérifie ici la présence ou non de points d'influence, la ligne rouge doit rester horizontale (sinon: présence de forts points d'influence), les forts points d'influence apparaissent au-delà d'une distance de Cook de 0.5 (cette limite apparait sur le graphique par une ligne pointillée lorsqu'elle est franchise)
  
  #pas de point d'influence important ici
 
  
  
  
- # l'ensemble des grpahiques visant à vérifier la validité du modèle peuvent être retrouvés via la commande suivante:
+ # l'ensemble des graphiques visant à vérifier la validité du modèle peuvent être retrouvés via la commande suivante:
 
 plot(reg_poids_juv_meres)
 # le troisième graphique est souvent utilisé pour tester spécifiquement l'hypothèse d'homoscédasticité des résidus: la courbe rouge doit être horizontale
@@ -272,7 +272,7 @@ plot(reg_poids_juv_meres)
 
 ## exemple d'un modèle à la validité discutable:
 
-# on réalise une régression mais en ajoutant avec un outlier évident
+# on réalise une régression mais en ajoutant un outlier évident
 
 
 reg_taille_poids_juv = lm(c(data_lezard$M_IND, 0.11) ~ c(data_lezard$SVL_IND, 25))
@@ -281,7 +281,7 @@ reg_taille_poids_juv = lm(c(data_lezard$M_IND, 0.11) ~ c(data_lezard$SVL_IND, 25
 
 plot(reg_taille_poids_juv)
 
-# on visualise très bien la présence de l'outlier sur les graphique de vérification
+# on visualise très bien la présence de l'outlier sur les graphiques de vérification
 
 
 
@@ -323,7 +323,7 @@ plot(reg_problem)
 plot(reg_poids_taille_juv) 
 # on n'observe pas de déviations majeures par rapport aux attendus d'une régression
 # linéaire (pas de problème de non linéarité ou de variabilité changeante des résidus,
-# normalité des résidus approximativement respectée, pas de points de levier majeur):
+# normalité des résidus approximativement respectée, pas de points d'influence majeurs):
 # le modèle effectué est donc valide
 
 
@@ -335,7 +335,7 @@ plot(reg_poids_taille_juv)
 
 
 Le coefficient directeur de la régression permet d'estimer l'intensité de la relation entre les deux variables, plus celui-ci est élevé (en valeur absolue) plus la variable réponse augmente rapidement avec l'augmentation de la variable explicative: en langage statistique on parle de **taille d'effet**. Pour facilement comparer des tailles d'effets (si nécessaire) il est préférable de **centrer-réduire** les variables en amont pour s'affranchir de leur dimensionnalité.  
-D'autre part, l'adéquation du modèle au donnée, c'est à dire la part de variance observée expliquée par le modèle, peut être obtenue à partir de la métrique du **R² (coefficient de détermination)**, qui est égal au carré du coefficient de corrélation de Pearson (pour info une démonstration mathématique de cette relation peut être trouvée ici: [https://statproofbook.github.io/P/slr-rsq.html](https://statproofbook.github.io/P/slr-rsq.html), [https://statproofbook.github.io/P/slr-corr](https://statproofbook.github.io/P/slr-corr)).
+D'autre part, **l'adéquation du modèle aux données**, c'est à dire la part de variance observée expliquée par le modèle, peut être obtenue à partir de la métrique du **R² (coefficient de détermination)**, qui est égal au carré du coefficient de corrélation de Pearson (pour info une démonstration mathématique de cette relation peut être trouvée ici: [https://statproofbook.github.io/P/slr-rsq.html](https://statproofbook.github.io/P/slr-rsq.html), [https://statproofbook.github.io/P/slr-corr](https://statproofbook.github.io/P/slr-corr)).
 
 
 
@@ -345,7 +345,8 @@ D'autre part, l'adéquation du modèle au donnée, c'est à dire la part de vari
 
 summary(reg_poids_juv_meres)$r.squared
 
-# très faible adéquation au données, seulement environ 1% de la variance expliqué
+# très faible adéquation aux données, seulement environ 1% de la variance (de la masse des juvéniles)
+# expliquée par le modèle
 
 
 
@@ -375,7 +376,7 @@ reg_corp_poids_juv$coefficients
 
 # après avoir centré réduit les variables, on observe qu'une augmentation de la corpulence
 # des individus a un plus grand impact que l'augmentation de la masse des mères sur la
-# variation de poids des individus (valeur absolue du coefficient directeur supérieure)
+# variation de masse des individus (valeur absolue du coefficient directeur supérieure)
 
 
 
@@ -445,11 +446,11 @@ reg_poids_taille_juv$coefficients
 
 Lorsque la relation entre deux variables continues semble être **affine (à toujours vérifier en amont !)** on peut modéliser la relation entre les deux variables par une **régression linéaire** (dans R: "**lm(Var1 ~ Var2)**", avec "Var1" la **variable réponse** et "Var2" la **variable explicative**).  
 
-Après avoir réalisé le modèle, il convient toujours de vérifier la **validité** de celui-ci, en visualisant si les résidus de la régression (dans R: "**residuals(nom_modele)**") respectent bien certaines hypothèses requises: ils doivent conserver une **variance constante** (homoscedasticité) et ne doivent **pas varier** en fonction de la variable réponse (marqueur d'une relation non linéaire). On peut aussi vérifier que la distribution des résidus est **normale** (cette hypothèse n'est pas indispensable pour une régression linéaire univariée mais assure une bonne qualité de modèle toutefois) et identifier la présence de **points d'influence** forts, qui pourraient fausser les résultats de la régression (comme par exemple avec d'éventuelles mesures aberrantes). Cet ensemble d'hypothèse peut être vérifié à l'aide de la fonction "**plot(nom_modele)**" dans R (attention à bien connaître l'interprétation à faire de chaque sortie graphique ainsi obtenue: voir plus haut dans ce TP).  
+Après avoir réalisé le modèle, il convient toujours de vérifier la **validité** de celui-ci, en visualisant si les résidus de la régression (dans R: "**residuals(nom_modele)**") respectent bien certaines hypothèses requises: ils doivent conserver une **variance constante** (homoscédasticité) et ne doivent **pas varier** en fonction de la variable réponse (marqueur d'une relation non linéaire). On peut aussi vérifier que la distribution des résidus est **normale** (cette hypothèse n'est pas indispensable pour une régression linéaire univariée mais assure une bonne qualité de modèle toutefois) et identifier la présence de **points d'influence** forts, qui pourraient fausser les résultats de la régression (comme par exemple avec d'éventuelles mesures aberrantes). Cet ensemble d'hypothèses peut être vérifié à l'aide de la fonction "**plot(nom_modele)**" dans R (attention à bien connaître l'interprétation à faire de chaque sortie graphique ainsi obtenue: voir plus haut dans ce TP).  
 
 Deux mesures statistiques permettent principalement d'interpréter le modèle: le **coefficient directeur** de la régression (dans R: deuxième valeur obtenue à l'aide de "**coefficients(nom_modele)**") indique la variation modélisée de la variable réponse lorsque la variable explicative augmente d'une unité, cela permet d'obtenir une **taille d'effet** potentiellement comparable entre plusieurs modèles après avoir centré-réduit les variables (il faut toutefois que la comparaison ait un sens); le **coefficient de détermination** (ou R-squared) de la régression (dans R: "**summary(nom_modele)$r.squared**") permet de connaître **l'adéquation du modèle aux données**, c'est à dire à quel point le modèle représente bien les variations existantes de la variable réponse (équivalent au **pourcentage de variation expliqué par le modèle quand on le multiplie par 100**).  
 
-On peut illustrer graphiquement la régression linéaire en ajoutant la droite de régression au graphique en nuage de point via la commande **abline(nom_regression)** (il est recommandé d'ajouter une couleur à cette ligne pour qu'elle soit facilement visible et légendable). Plus généralement, les prédictions du modèle peuvent être obtenue grâce à la commande **predict(nom_modele, nouvelles_données)**
+On peut illustrer graphiquement la régression linéaire en ajoutant la droite de régression au graphique en nuage de point via la commande **abline(nom_regression)** (il est recommandé d'ajouter une couleur à cette ligne pour qu'elle soit facilement visible et légendable). Plus généralement, les prédictions du modèle peuvent être obtenues grâce à la commande **predict(nom_modele, nouvelles_données)**
 
 
 

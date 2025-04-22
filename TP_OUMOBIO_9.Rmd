@@ -45,7 +45,7 @@ data_lezard = read.table("Suivi_lezard_vivipare.csv", header = T, sep = "\t", de
 
 # Distributions biaisées et transformation des données
 
-Il peut arriver que les prérequis de la régression linéaire ne soient pas respectés si la distribution de la variable réponse **dévie de la loi normale**, nottament du fait de **distributions asymétriques**, avec une forte queue de distribution sur un côté de la distribution (**biais positif** à droite de la distribution: positivement asymétrique; **biais négatif** à gauche de la distribution: négativement asymétrique). Ces problématiques peuvent facilement être résolues en **transformant la variable réponse**: on utilise usuellement une transformation racine carré pour un faible biais positif et carré pour un faible biais négatif; une transformation racine cubique (dans R: "x^(-3)") pour un biais positif modéré et cubique pour un biais négatif modéré; une transformation logarithmique pour un fort biais positif ; une transformation inverse ("1/x") pour un biais sévère (présence d'outliers). Dans la pratique, il peut être utile de tester les différentes transformations pour sélectionner celle qui permet de mieux s'approcher d'une distribution normale.
+Il peut arriver que les prérequis de la régression linéaire ne soient pas respectés si la distribution de la variable réponse **dévie de la loi normale**, notamment du fait de **distributions asymétriques**, avec une forte queue de distribution sur un côté de la distribution (**biais positif** à droite de la distribution: positivement asymétrique; **biais négatif** à gauche de la distribution: négativement asymétrique). Ces problématiques peuvent facilement être résolues en **transformant la variable réponse**: on utilise usuellement une transformation racine carré pour un faible biais positif et carré pour un faible biais négatif; une transformation racine cubique (dans R: "x^(-3)") pour un biais positif modéré et cubique pour un biais négatif modéré; une transformation logarithmique pour un fort biais positif ; une transformation inverse ("1/x") pour un biais sévère (présence d'outliers). Dans la pratique, il peut être utile de tester les différentes transformations pour sélectionner celle qui permet de mieux s'approcher d'une distribution normale.
 
 Prenons un exemple concret:
 
@@ -173,7 +173,7 @@ lines(timevalues, predictedcounts, col = "darkgreen", lwd = 3)
 ## Linéarisation de relations non linéaires
 
 
-Lorsque la relation observée a la forme caractéristique d'une **fonction connue donnée** et que celle-ci est **linéarisable** (par exemple "Y = b * exp(a * X)", "Y = a * ln(b + X)", "Y = 1 / (1 + exp(-X))"; i.e. respectivement des relations exponentielle, logarithmique ou sigmoïde qui sont linéarisable par des transformations logarithmique, exponentielle et logit), on peut **transformer la variable réponse** de manière à avoir une relation linéaire avec la variable explicative.   
+Lorsque la relation observée a la forme caractéristique d'une **fonction connue donnée** et que celle-ci est **linéarisable** (par exemple "Y = b * exp(a * X)", "Y = a * ln(b + X)", "Y = 1 / (1 + exp(-X))"; i.e. respectivement des relations exponentielle, logarithmique ou sigmoïde qui sont linéarisables par des transformations logarithmique, exponentielle et logit), on peut **transformer la variable réponse** de manière à avoir une relation linéaire avec la variable explicative.   
 
 Prenons l'exemple d'une culture batérienne pour laquelle on étudie l'évolution de la densité en fonction du temps. Pendant la phase de croissance dite "exponentielle", cette évolution peut être décrite par une relation de type: "Densité = b x exp(a x temps)". Cette relation est linéarisable en utilisant une transormation logarithmique, on obtient alors: "log(Densité) = log(b) + a x temps". Etudions un exemple à partir de données simulées:
 
@@ -281,7 +281,7 @@ Lorsque l'on connait le type de relation non-linéaire existant entre deux varia
 
 #Nouveau jeu de données
 #vitesse de reaction d'une enzyme en fonction de la
-#concentration en substrat
+#concentration en substrat:
 
 vitesse_i<-c(0.043, 0.048, 0.052, 0.055, 0.057, 0.061) 
 #=densite optique (Do) / temps (=vitesse)
@@ -312,7 +312,7 @@ lines(vec, y100poly, col = "blue")
 
 
 
-# bon résultat, mais on souhaiterais
+# bon résultat, mais on souhaiterait
 #un plateau plutôt qu'une pente négative !
 
 
@@ -341,7 +341,7 @@ modnl<-nls(vitesse_i~(a*concentration)/(b+concentration),
            start = list(a=1, b=1))
 #On donne des points de départ pour l'algorithme
 
-#Remarque: on peutéecrire l'equation que l'on veut,
+#Remarque: on peut écrire l'equation que l'on veut,
 #créer son propre modele en fonction de nos données
 
 #Visualisation
@@ -371,7 +371,7 @@ coef(modnl)#Vmax(=a), Km(=b) (Km = quand Vi=1/2Vmax)
 
 
 
-Lorsque la **régression linéaire paraît inadaptée** (prérequis de la régression ou linéarité non vérifié) il peut être utile de changer la forme de la régression pour obtenir une régression valide.  
+Lorsque la **régression linéaire paraît inadaptée** (prérequis de la régression ou linéarité non vérifiés) il peut être utile de changer la forme de la régression pour obtenir une régression valide.  
 Si la relation semble linéaire mais que les prérequis ne sont pas vérifiés le problème peut provenir d'une **asymétrie** dans la distribution des variables modélisées. Dans ce cas une transformation de la variable réponse peut permettre de corriger le défaut de symétrie:
 
   - transformation au **carré ou au cube**, si le **biais de symétrie est négatif** et modéré / fort
@@ -381,10 +381,10 @@ Si la relation semble linéaire mais que les prérequis ne sont pas vérifiés l
   
 Dans le cas où la relation est **non linéaire**, il convient d'adapter la modélisation en:
 
-  - utilisant une **régression polynomiale d'ordre 2** si la forme de la courbe est **incurvé ou en "U"**
-  - utilisant une **transformation de la variable réponse** si la relation existante est **linéarisable** (relation exponentielle linéarisé après transformation logarithmique, relation sigmoïde linéarisé après transformation logit)
+  - utilisant une **régression polynomiale d'ordre 2** si la forme de la courbe est **incurvée ou en "U"**
+  - utilisant une **transformation de la variable réponse** si la relation existante est **linéarisable** (relation exponentielle linéarisée après transformation logarithmique, relation sigmoïde linéarisée après transformation logit)
   
-On peut directement intégrer une transformation de variable dans une formule en positionnant la transformation dans l'expression **I()** (par exemple, "lm(I(Reponse¨2) ~ Explicatif)" permet de faire une transformation de la variable réponse au carré). 
+On peut directement intégrer une transformation de variable dans une formule en positionnant la transformation dans l'expression **I()** (par exemple, "lm(I(Reponse^2) ~ Explicatif)" permet de faire une transformation de la variable réponse au carré). 
 
 
 
